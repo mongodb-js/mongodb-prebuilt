@@ -1,6 +1,6 @@
 {
   "name": "mongodb-prebuilt",
-  "version": "4.0.1-mongodb.3.0.5",
+  "version": "4.0.1-mongodb.3.0.4",
   "description": "Install MongoDB prebuilt binaries via npm",
   "main": "index.js",
   "scripts": {

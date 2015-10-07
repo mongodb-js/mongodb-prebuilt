@@ -43,9 +43,9 @@ The version numbers of this module match the version number of the [offical Mong
 ## Programmatic usage
 
 ``` js
-var mongod = require('mongodb-prebuilt');
+var mongo_bin = require('mongodb-prebuilt');
 var proc = require('child_process');
 
 // spawn mongod
-var child = proc.spawn(mongod);
+var child = proc.spawn(mongo_bin + "mongod");
 ```

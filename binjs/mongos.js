@@ -1,0 +1,1 @@
+var mongod = require('../cli')('mongos');

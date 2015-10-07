@@ -1,0 +1,46 @@
+{
+  "name": "mongodb-prebuilt",
+  "version": "3.0.6",
+  "description": "Install MongoDB prebuilt binaries via npm",
+  "main": "index.js",
+  "scripts": {
+    "postinstall": "node install.js",
+    "cache-clean": "rm -rf dist *.txt"
+  },
+  "bin": {
+    "bsondump": "binjs/bsondump.js",
+    "mongo": "binjs/mongo.js",
+    "mongod": "binjs/mongod.js",
+    "mongodump": "binjs/mongodump.js",
+    "mongoexport": "binjs/mongoexport.js",
+    "mongofiles": "binjs/mongofiles.js",
+    "mongoimport": "binjs/mongoimport.js",
+    "mongooplog": "binjs/mongooplog.js",
+    "mongoperf": "binjs/mongoperf.js",
+    "mongorestore": "binjs/mongorestore.js",
+    "mongos": "binjs/mongos.js",
+    "mongosniff": "binjs/mongosniff.js",
+    "mongostat": "binjs/mongostat.js",
+    "mongotop": "binjs/mongotop.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/winfinit/mongodb-prebuilt.git"
+  },
+  "keywords": [
+    "mongodb",
+    "prebuilt",
+    "mongod"
+  ],
+  "author": "Roman Jurkov <winfinit@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/winfinit/mongodb-prebuilt/issues"
+  },
+  "dependencies": {
+    "mongodb-download": "^1.0.5",
+    "decompress": "^2.3.0",
+    "debug": "^2.2.0"
+  },
+  "homepage": "https://github.com/winfinit/mongodb-prebuilt#readme"
+}

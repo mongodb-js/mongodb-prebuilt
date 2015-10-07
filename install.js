@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
-// maintainer note - x.y.z-ab version in package.json -> x.y.z
+// maintainer note - x.y.z-mongodb.3.0.4 version in package.json -> x.y.z
+
+var LATEST_STABLE_RELEASE = "3.0.6";
 
 var fs = require('fs')
 var os = require('os')
@@ -8,8 +10,13 @@ var path = require('path')
 var Decompress = require('decompress');
 var download = require('mongodb-download');
 var debug = require('debug')('mongodb-prebuilt');
-var version = require('./package').version.replace(/-.*/, '');
+var version = require('./package').version;
 
+if ( /mongodb/.test(version) ) {
+  version = (version.match(/mongodb.(.*)/))[1];
+} else {
+  version = LATEST_STABLE_RELEASE;
+}
 
 function onerror (err) {
   throw err

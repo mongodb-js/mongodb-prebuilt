@@ -10,27 +10,24 @@ var path = require('path')
 var Decompress = require('decompress');
 var download = require('mongodb-download');
 var debug = require('debug')('mongodb-prebuilt');
-var version = require('./package').version;
 
-if ( /mongodb/.test(version) ) {
-  version = (version.match(/mongodb.(.*)/))[1];
-} else {
-  version = LATEST_STABLE_RELEASE;
-}
+var version = process.env.npm_config_mongo_version || LATEST_STABLE_RELEASE;
+debug("installing version: %s", version);
 
 function onerror (err) {
   throw err
 }
 
 var platform = os.platform();
-var bin_path = path.join(__dirname, './dist/bin/');
+var dist_path = path.join(__dirname, './dist/');
 // downloads if not cached
 download({version: version}, extractFile);
 
 // unzips and makes path.txt point at the correct executable
 function extractFile (err, archive) {
   if (err) return onerror(err)
-  fs.writeFile(path.join(__dirname, 'bin_path.txt'), bin_path, function (err) {
+  fs.writeFileSync(path.join(__dirname, 'active_version.txt'), version);
+  fs.writeFile(path.join(__dirname, 'dist_path.txt'), dist_path, function (err) {
     if (err) return onerror(err)
 
     var archive_type;
@@ -43,7 +40,7 @@ function extractFile (err, archive) {
 
     new Decompress({mode: '755'})
 	    .src(archive)
-	    .dest(path.join(__dirname, 'dist'))
+	    .dest(path.join(__dirname, 'dist', version))
 	    .use(Decompress[archive_type]({strip: 1}))
 	    .run(function(err, files) {
 	    	if (err) return onerror(err);

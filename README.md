@@ -54,17 +54,12 @@ Complete list of programs:
 
 Works on Mac, Windows, Linux and Solaris OSes that MongoDB supports.
 
-The version numbers of this module DO NOT match the version number of the [offical MongoDB releases](https://www.mongodb.org/downloads#production). By default, latest production release will be selected.
-to request specific version of MongoDB release specify version like this:
+The version numbers of this module DO NOT match the version number of the [offical MongoDB releases](https://www.mongodb.org/downloads#production). By default, latest production release will be selected. Different version is set via `mongodb-version`
+option:
 
 ```
-// package.json
-"mongodb-prebuilt": "4.0.1-mongodb.3.0.6"
-
-// command line 
-npm install -g mongodb-prebuilt@4.0.1-mongodb.3.0.6
+npm install --mongodb-version=3.0.2 mongodb-prebuilt
 ```
-
 
 ## Programmatic usage
 

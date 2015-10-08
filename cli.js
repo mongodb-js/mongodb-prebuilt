@@ -2,7 +2,7 @@ var proc = require('child_process');
 
 module.exports = function(exec_name) {
 	var debug = require('debug')('mongodb-prebuilt:' + exec_name);
-	var exec_path = require('./');
+	var exec_path = require('./index').bin_path();
 	exec_path += exec_name;
 
 	debug("exec_path: %s", exec_path);

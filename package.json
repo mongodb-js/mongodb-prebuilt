@@ -1,6 +1,6 @@
 {
   "name": "mongodb-prebuilt",
-  "version": "4.0.1",
+  "version": "4.0.2-beta1",
   "description": "Install MongoDB prebuilt binaries via npm",
   "main": "index.js",
   "scripts": {
@@ -40,7 +40,8 @@
   "dependencies": {
     "mongodb-download": "^1.0.8",
     "decompress": "^2.3.0",
-    "debug": "^2.2.0"
+    "debug": "^2.2.0",
+    "yargs": "^3.26.0"
   },
   "homepage": "https://github.com/winfinit/mongodb-prebuilt#readme"
 }

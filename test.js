@@ -1,0 +1,1 @@
+var db = require('foo')

@@ -64,9 +64,11 @@ npm install --mongodb-version=3.0.2 mongodb-prebuilt
 ## Programmatic usage
 
 ``` js
-var mongo_bin = require('mongodb-prebuilt');
-var proc = require('child_process');
+var mongodb_prebuilt = require('mongodb-prebuilt');
 
-// spawn mongod
-var child = proc.spawn(mongo_bin + "mongod");
+mongodb_prebuilt.start_server({
+    version: "3.0.6" // optional, if not specified current active is used
+}, function(err, db_response) {
+
+});
 ```

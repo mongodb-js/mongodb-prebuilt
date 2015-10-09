@@ -66,9 +66,60 @@ npm install --mongodb-version=3.0.2 mongodb-prebuilt
 ``` js
 var mongodb_prebuilt = require('mongodb-prebuilt');
 
-mongodb_prebuilt.start_server({
-    version: "3.0.6" // optional, if not specified current active is used
-}, function(err, db_response) {
-
+mongodb_prebuilt.start_server({}, function(err) {
+	if (err) {
+		console.log('mongod didnt start:', err);
+	} else {
+		console.log('mongod is started');
+	}
 });
+```
+
+## start_server(opts, callback)
+
+### opts
+Type: `object`
+
+Hash of `options`.
+
+### callback(err)
+Type: `function`
+
+Function called when the `mongod` is started or returned an error
+
+## Options
+
+### args
+Type: `function`
+
+Optional arguments that are going to be passed to mongod, if argument doesn't
+have a value, set that value to true. To see complete list of supported
+arguments for your version run:
+```
+mongod --help
+```
+
+example of start_server with arguments
+```
+mongodb_prebuilt.start_server({
+		args: {
+			port: 27017,
+			quiet: true
+		}
+})
+```
+
+### logs_callback(buffer)
+Type: `function`
+
+Optional logs handler.
+
+```
+mongodb_prebuilt.start_server({
+	logs_callback: logs_callback
+}, function(err) {});
+
+function logs_callback(buffer) {
+	console.log("log message:", buffer.toString());
+}
 ```

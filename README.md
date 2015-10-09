@@ -89,6 +89,21 @@ Function called when the `mongod` is started or returned an error
 
 ## Options
 
+### version
+Type: `string`
+
+Optional version of MongoDB can be specified, if it doesn't match latest
+version, and it is a first time you are running this version, mongodb-prebuilt
+will have to go through intall process first.
+
+```
+mongodb_prebuilt.start_server({
+	version: "3.0.4"
+}, function(err) {
+	if (!err) console.log('server started');
+});
+```
+
 ### args
 Type: `function`
 
@@ -122,4 +137,19 @@ mongodb_prebuilt.start_server({
 function logs_callback(buffer) {
 	console.log("log message:", buffer.toString());
 }
+```
+
+## Logging
+To see logs in stdout, set environment variable DEBUG to `mongodb`
+
+*nix
+```
+export DEBUG=mongodb
+// without export
+DEBUG=mongodb node myapp.js
+```
+
+windows
+```
+set DEBUG=mongodb
 ```

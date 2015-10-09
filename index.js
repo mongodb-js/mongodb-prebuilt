@@ -6,45 +6,35 @@ var debug = require('debug')('mongodb-prebuilt');
 var mongodb_logs = require('debug')('mongodb');
 
 module.exports = {
-	bin_path: function(version) {
-		var dist_path = this.dist_path();
-		if (!version) {
-			version = this.active_version();
-		} 
+	"bin_path": bin_path,
+	"dist_path": dist_path,
+	"active_version": active_version,
+	"install": install,
+	"start_server": start_server
+};
 
-		var bin_path = path.join(dist_path, version, '/bin/');
-		debug("bin path: %s", bin_path);
+function start_server(opts, callback) {
+	if (!opts) {
+		opts = {};
+	} 
 
-		if ( dir_exists(bin_path) ) {
-			return bin_path;
-		} else {
-			debug("version %s is not installed", version);
-			return;
-		}
-	},
-	dist_path: function() {
-		return fs.readFileSync(path.join(__dirname, 'dist_path.txt'), 'utf-8');
-	},
-	active_version: function() {
-		return fs.readFileSync(path.join(__dirname, 'active_version.txt'), 'utf-8');
-	},
-	install: function(version, callback) {
-		var bin_path = this.bin_path(version);
-		if ( dir_exists(bin_path) ) {
-			callback(null);
-		} else {
-			install(version, function(err) {
+	var args = build_args(opts);
+	var bpath = bin_path(opts.version);
+	if (! bpath ) {
+		install(opts.version, function(err) {
+			if ( err ) {
 				callback(err);
-			});
-		}
-	},
-	start_server: function(opts, callback) {
-		if (!opts) {
-			opts = {};
-		} 
+			} else {
+				bpath = bin_path(opts.version);
+				start();
+			}
+		});
+	} else {
+		start();
+	}
 
-		var args = build_args(opts);
-		var child = proc.spawn(this.bin_path(opts.version) + "mongod", args);
+	function start() {
+		var child = proc.spawn(bpath + "mongod", args);
 		child.on('error', function (err) {
 		  debug('Failed to start child process.', err);
 		  callback(err);
@@ -102,3 +92,40 @@ function build_args(opts) {
 	});
 	return args;
 }
+
+function bin_path (version) {
+	var dpath = dist_path();
+	if (!version) {
+		version = active_version();
+	} 
+
+	var bpath = path.join(dpath, version, '/bin/');
+	debug("bin path: %s", bpath);
+
+	if ( dir_exists(bpath) ) {
+		return bpath;
+	} else {
+		debug("version %s is not installed", version);
+		return;
+	}
+}
+
+function dist_path() {
+	return fs.readFileSync(path.join(__dirname, 'dist_path.txt'), 'utf-8');
+}
+
+function active_version() {
+	return fs.readFileSync(path.join(__dirname, 'active_version.txt'), 'utf-8');
+}
+
+function install(version, callback) {
+	var bin_path = bin_path(version);
+	if ( dir_exists(bin_path) ) {
+		callback(null);
+	} else {
+		install(version, function(err) {
+			callback(err);
+		});
+	}
+}
+

@@ -24,7 +24,6 @@
     });
   }
 
-
   function extractFile (archive, version, callback) {
     var dist_path = path.join(__dirname, './dist/');
 

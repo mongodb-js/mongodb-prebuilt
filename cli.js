@@ -1,3 +1,4 @@
+'use strict';
 var proc = require('child_process');
 
 module.exports = function(exec_name) {

@@ -1,3 +1,4 @@
+'use strict';
 var fs = require('fs')
 var path = require('path');
 var install = require('./install');
@@ -65,7 +66,6 @@ function start_server(opts, callback) {
 }
 
 function dir_exists(dir) {
-	console.log(dir);
 	try {
 	    var stats = fs.lstatSync(dir);
 	    if (stats.isDirectory()) {

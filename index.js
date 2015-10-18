@@ -3,6 +3,8 @@ var fs = require('fs')
 var path = require('path');
 var install = require('./install');
 var proc = require('child_process');
+var EventEmitter = require('events').EventEmitter;
+var emitter = new EventEmitter();
 var debug = require('debug')('mongodb-prebuilt');
 var mongodb_logs = require('debug')('mongodb');
 
@@ -15,6 +17,7 @@ module.exports = {
 };
 
 function start_server(opts, callback) {
+	emitter.once('mongoStarted', callback);
 	if (!opts) {
 		opts = {};
 	} 
@@ -57,7 +60,10 @@ function start_server(opts, callback) {
 				// log message indicating succesful start
 				if ( /waiting for connections on port/.test(data.toString())) {
 					started = 1;
-					callback();
+					emitter.emit('mongoStarted');
+				}
+				if ( /errno:48 Address already in use/.test(data.toString())) {
+					emitter.emit('mongoStarted', "EADDRINUSE");
 				}
 			}
 			mongodb_logs(data.toString().slice(0, -1));

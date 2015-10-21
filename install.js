@@ -46,7 +46,12 @@
   	    .dest(path.join(__dirname, 'dist', version))
   	    .use(Decompress[archive_type]({strip: 1}))
   	    .run(function(err, files) {
-          callback(err);
+          if (! err ) {
+            callback();
+          } else {
+            //debug(err);
+          }
+          
   	    });
 
     });

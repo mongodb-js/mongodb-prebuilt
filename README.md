@@ -139,6 +139,12 @@ function logs_callback(buffer) {
 }
 ```
 
+### auto_shutdown
+Type: `boolean`
+Default: false
+
+Will automatically shutdown the mongodb server when the parent process either exits or throws an uncaught exception
+
 ## Logging
 To see logs in stdout, set environment variable DEBUG to `mongodb`
 

@@ -49,7 +49,12 @@ function start_server(opts, callback) {
 				opts.exit_callback(code);
 			}
 		});
-		child.stderr.pipe(child.stdout);
+		try {
+			child.stderr.pipe(child.stdout);
+		} catch (e) {
+			debug('pipe failed: %s', e);
+            		return;
+		}
 
 		var started = 0;
 		child.stdout.on('data', function(data) {

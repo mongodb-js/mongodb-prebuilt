@@ -68,6 +68,13 @@ function start_server(opts, callback) {
 			}
 			mongodb_logs(data.toString().slice(0, -1));
 		});
+		if (opts.auto_shutdown) {
+			function shutdown() {
+				child.kill('SIGTERM');
+			}
+			process.on('uncaughtException', shutdown);
+			process.on('exit', shutdown);
+		}
 	}
 }
 

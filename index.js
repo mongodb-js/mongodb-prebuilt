@@ -49,7 +49,11 @@ function start_server(opts, callback) {
 				opts.exit_callback(code);
 			}
 		});
-		child.stderr.pipe(child.stdout);
+		
+                // this type of redirect is causing uncaught exception even with try/catch
+                // when process exits with non zero error code, even tho error handler
+                // is registered
+                //child.stderr.pipe(child.stdout);
 
 		var started = 0;
 		child.stdout.on('data', function(data) {

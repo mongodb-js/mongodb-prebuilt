@@ -49,11 +49,15 @@ function start_server(opts, callback) {
 				opts.exit_callback(code);
 			}
 		});
+
+		emitter.once('mongoShutdown', function() {
+			child.kill('SIGTERM');
+		});
 		
-                // this type of redirect is causing uncaught exception even with try/catch
-                // when process exits with non zero error code, even tho error handler
-                // is registered
-                //child.stderr.pipe(child.stdout);
+        // this type of redirect is causing uncaught exception even with try/catch
+        // when process exits with non zero error code, even tho error handler
+        // is registered
+        //child.stderr.pipe(child.stdout);
 
 		var started = 0;
 		child.stdout.on('data', function(data) {
@@ -74,12 +78,13 @@ function start_server(opts, callback) {
 		});
 		if (opts.auto_shutdown) {
 			var shutdown = function() { 
-                            child.kill('SIGTERM');
-                        };
+            	child.kill('SIGTERM');
+            };
 			process.on('uncaughtException', shutdown);
 			process.on('exit', shutdown);
 		}
 	}
+	return emitter;
 }
 
 function dir_exists(dir) {

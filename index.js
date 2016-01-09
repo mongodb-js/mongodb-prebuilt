@@ -4,7 +4,6 @@ var path = require('path');
 var install = require('./install');
 var proc = require('child_process');
 var EventEmitter = require('events').EventEmitter;
-var emitter = new EventEmitter();
 var debug = require('debug')('mongodb-prebuilt');
 var mongodb_logs = require('debug')('mongodb');
 
@@ -17,6 +16,7 @@ module.exports = {
 };
 
 function start_server(opts, callback) {
+	var emitter = new EventEmitter();
 	emitter.once('mongoStarted', callback);
 	if (!opts) {
 		opts = {};

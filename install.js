@@ -9,7 +9,7 @@
   var download = require('mongodb-download');
   var debug = require('debug')('mongodb-prebuilt');
 
-  var LATEST_STABLE_RELEASE = "3.0.7";
+  var LATEST_STABLE_RELEASE = "3.2.0";
 
   function install(version, callback) {
     if (!version) {

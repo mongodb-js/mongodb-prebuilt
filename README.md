@@ -58,7 +58,7 @@ The version numbers of this module DO NOT match the version number of the [offic
 option:
 
 ```
-npm install --mongodb-version=3.0.2 mongodb-prebuilt
+npm install --mongodb-version=3.2.0 mongodb-prebuilt
 ```
 
 ## Programmatic usage
@@ -94,11 +94,11 @@ Type: `string`
 
 Optional version of MongoDB can be specified, if it doesn't match latest
 version, and it is a first time you are running this version, mongodb-prebuilt
-will have to go through intall process first.
+will have to go through the install process first.
 
 ```
 mongodb_prebuilt.start_server({
-	version: "3.0.4"
+	version: "3.2.0"
 }, function(err) {
 	if (!err) console.log('server started');
 });

@@ -15,6 +15,13 @@ module.exports = {
 	"start_server": start_server
 };
 
+var shutdown = function() {
+    mongodb_logs("Shutting down");
+}
+
+process.once('uncaughtException', shutdown);
+process.on('exit', shutdown);
+
 function start_server(opts, callback) {
 	var emitter = new EventEmitter();
 	emitter.once('mongoStarted', callback);
@@ -83,11 +90,10 @@ function start_server(opts, callback) {
 			mongodb_logs(data.toString().slice(0, -1));
 		});
 		if (opts.auto_shutdown) {
-		    var shutdown = function() { 
+                    // override shutdown function with sigterm
+		    shutdown = function() { 
             	        child.kill('SIGTERM');
                     };
-		    process.once('uncaughtException', shutdown);
-		    process.on('exit', shutdown);
 		}
 	}
 	return emitter;

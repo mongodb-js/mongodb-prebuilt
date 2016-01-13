@@ -84,12 +84,9 @@ function start_server(opts, callback) {
 		});
 		if (opts.auto_shutdown) {
 		    var shutdown = function() { 
-                        process.removeListener('uncaughtException', function() {
-                            // removed
-                        });
             	        child.kill('SIGTERM');
                     };
-		    process.on('uncaughtException', shutdown);
+		    process.once('uncaughtException', shutdown);
 		    process.on('exit', shutdown);
 		}
 	}

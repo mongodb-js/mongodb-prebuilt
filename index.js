@@ -19,11 +19,11 @@ var shutdown = function() {
     mongodb_logs("Shutting down");
 }
 
-process.once('uncaughtException', shutdown);
+process.on('uncaughtException', shutdown);
 process.on('exit', shutdown);
 
 function start_server(opts, callback) {
-	var emitter = new EventEmitter();
+        var emitter = new EventEmitter();
 	emitter.once('mongoStarted', callback);
 	if (!opts) {
 		opts = {};
@@ -45,6 +45,7 @@ function start_server(opts, callback) {
 	}
 
 	function start() {
+                debug("spawn", bpath + "mongod", args.join(' '))
 		var child = proc.spawn(bpath + "mongod", args);
 		child.on('error', function (err) {
 		  debug('Failed to start child process.', err);

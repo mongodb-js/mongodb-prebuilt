@@ -6,6 +6,7 @@ var proc = require('child_process');
 var EventEmitter = require('events').EventEmitter;
 var debug = require('debug')('mongodb-prebuilt');
 var mongodb_logs = require('debug')('mongodb');
+var emitter = new EventEmitter();
 
 module.exports = {
 	"bin_path": bin_path,
@@ -23,7 +24,6 @@ process.on('uncaughtException', shutdown);
 process.on('exit', shutdown);
 
 function start_server(opts, callback) {
-        var emitter = new EventEmitter();
 	emitter.once('mongoStarted', callback);
 	if (!opts) {
 		opts = {};

@@ -53,14 +53,14 @@ function start_server(opts, callback) {
 		child.on('close', function (code) {
 			debug('child process exited with code ' + code);
 			if (!started) {
-				if (code !== 0) {
-					var error = new Error('mongod process exited with code ' + code);
-					if (code === 48) {
-						error.code = error.errno = 'EADDRINUSE';
-						error.syscall = 'bind';
-					}
-					emitter.emit('mongoStarted', error);
-				}
+                                // log message indicating succesful start
+                                if ( /waiting for connections on port/.test(data.toString())) {
+                                        started = 1;
+                                        emitter.emit('mongoStarted');
+                                }
+                                if ( /errno:48 Address already in use/.test(data.toString())) {
+                                        emitter.emit('mongoStarted', "EADDRINUSE");
+                                }
 			} else if ( opts.exit_callback ) {
 				opts.exit_callback(code);
 			}

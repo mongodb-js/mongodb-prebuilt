@@ -50,21 +50,13 @@ function start_server(opts, callback) {
 		  debug('Failed to start child process.', err);
 		  callback(err);
 		});
-		child.on('close', function (code) {
-			debug('child process exited with code ' + code);
-			if (!started) {
-                                // log message indicating succesful start
-                                if ( /waiting for connections on port/.test(data.toString())) {
-                                        started = 1;
-                                        emitter.emit('mongoStarted');
-                                }
-                                if ( /errno:48 Address already in use/.test(data.toString())) {
-                                        emitter.emit('mongoStarted', "EADDRINUSE");
-                                }
-			} else if ( opts.exit_callback ) {
-				opts.exit_callback(code);
-			}
-		});
+
+                child.on('close', function (code) {
+                        debug('child process exited with code ' + code);
+                        if ( opts.exit_callback ) {
+                                opts.exit_callback(code);
+                        }
+                });
 
 		emitter.once('mongoShutdown', function() {
 			child.kill('SIGTERM');
@@ -76,19 +68,23 @@ function start_server(opts, callback) {
         //child.stderr.pipe(child.stdout);
 
 		var started = 0;
-		child.stdout.on('data', function(data) {
-			if ( opts.logs_callback ) {
-				opts.logs_callback(data);
-			}
-			if (! started ) {
-				// log message indicating succesful start
-				if ( /waiting for connections on port/.test(data.toString())) {
-					started = 1;
-					emitter.emit('mongoStarted');
-				}
-			}
-			mongodb_logs(data.toString().slice(0, -1));
-		});
+                child.stdout.on('data', function(data) {
+                        if ( opts.logs_callback ) {
+                                opts.logs_callback(data);
+                        }
+                        if (! started ) {
+                                // log message indicating succesful start
+                                if ( /waiting for connections on port/.test(data.toString())) {
+                                        started = 1;
+                                        emitter.emit('mongoStarted');
+                                }
+                                if ( /errno:48 Address already in use/.test(data.toString())) {
+                                        emitter.emit('mongoStarted', "EADDRINUSE");
+                                }
+                        }
+                        mongodb_logs(data.toString().slice(0, -1));
+                });
+
 		if (opts.auto_shutdown) {
                     // override shutdown function with sigterm
 		    shutdown = function() { 

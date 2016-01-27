@@ -7,6 +7,7 @@ var EventEmitter = require('events').EventEmitter;
 var debug = require('debug')('mongodb-prebuilt');
 var mongodb_logs = require('debug')('mongodb');
 var emitter = new EventEmitter();
+var shutdownChildren = [];
 
 module.exports = {
 	"bin_path": bin_path,
@@ -17,8 +18,11 @@ module.exports = {
 };
 
 var shutdown = function() {
-    mongodb_logs("Shutting down");
-}
+	mongodb_logs("Shutting down");
+	shutdownChildren.forEach(function(child) {
+		child.kill('SIGTERM');
+	});
+};
 
 process.on('uncaughtException', shutdown);
 process.on('exit', shutdown);
@@ -27,7 +31,7 @@ function start_server(opts, callback) {
 	emitter.once('mongoStarted', callback);
 	if (!opts) {
 		opts = {};
-	} 
+	}
 
 	var args = build_args(opts);
 	var bpath = bin_path(opts.version);
@@ -62,7 +66,7 @@ function start_server(opts, callback) {
 		emitter.once('mongoShutdown', function() {
 			child.kill('SIGTERM');
 		});
-		
+
         // this type of redirect is causing uncaught exception even with try/catch
         // when process exits with non zero error code, even tho error handler
         // is registered
@@ -87,10 +91,7 @@ function start_server(opts, callback) {
                 });
 
 		if (opts.auto_shutdown) {
-                    // override shutdown function with sigterm
-		    shutdown = function() { 
-            	        child.kill('SIGTERM');
-                    };
+			shutdownChildren.push(child);
 		}
 	}
 	return emitter;
@@ -106,7 +107,7 @@ function dir_exists(dir) {
 	catch (e) {
 		debug("error from lstat:", e);
 		return false;
-	}	
+	}
 }
 
 function build_args(opts) {
@@ -128,7 +129,7 @@ function bin_path (version) {
 	var dpath = dist_path();
 	if (!version) {
 		version = active_version();
-	} 
+	}
 
 	var bpath = path.join(dpath, version, '/bin/');
 	debug("bin path: %s", bpath);

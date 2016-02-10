@@ -1,6 +1,6 @@
 {
   "name": "mongodb-prebuilt",
-  "version": "4.4.9",
+  "version": "4.5.0",
   "description": "Install MongoDB prebuilt binaries via npm",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,8 @@
     "mongos": "binjs/mongos.js",
     "mongosniff": "binjs/mongosniff.js",
     "mongostat": "binjs/mongostat.js",
-    "mongotop": "binjs/mongotop.js"
+    "mongotop": "binjs/mongotop.js",
+    "mongokiller": "binjs/mongokiller.js"
   },
   "repository": {
     "type": "git",

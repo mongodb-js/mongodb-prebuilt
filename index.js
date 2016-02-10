@@ -16,8 +16,11 @@ module.exports = {
 	"start_server": start_server
 };
 
-var shutdown = function() {
+var shutdown = function(e) {
     mongodb_logs("Shutting down");
+    if (e) {
+        throw e;
+    }
 }
 
 process.on('uncaughtException', shutdown);
@@ -92,8 +95,11 @@ function start_server(opts, callback) {
 
 		if (opts.auto_shutdown) {
                     // override shutdown function with sigterm
-		    shutdown = function() { 
+		    shutdown = function(e) { 
             	        child.kill('SIGTERM');
+                        if (e) {
+                            throw e;
+                        }
                     };
 		}
 	}

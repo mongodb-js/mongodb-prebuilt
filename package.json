@@ -1,6 +1,6 @@
 {
   "name": "mongodb-prebuilt",
-  "version": "4.5.0",
+  "version": "4.5.1",
   "description": "Install MongoDB prebuilt binaries via npm",
   "main": "index.js",
   "scripts": {
@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "mongodb-download": "^1.2.1",
-    "decompress": "^2.3.0",
+    "decompress": "^3.0.0",
     "debug": "^2.2.0",
     "yargs": "^3.26.0"
   },

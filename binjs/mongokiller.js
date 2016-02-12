@@ -11,7 +11,11 @@ setInterval(function() {
     try {
         process.kill(process.argv[2],0);
     } catch(e) {
-        process.kill(process.argv[3]);
+        try {
+            process.kill(process.argv[3]);
+        } catch(e) {
+            // doesnt matter if it is dead
+        }
         process.exit();
     }
 }, 2000);

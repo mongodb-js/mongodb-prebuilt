@@ -50,11 +50,11 @@ function start_server(opts, callback) {
 	function start() {
                 debug("spawn", bpath + "mongod", args.join(' '))
 		var child = proc.spawn(bpath + "mongod", args);
-		var killer = proc.spawn(
-			path.join(__dirname, "binjs", "mongokiller.js"), 
-			[process.pid, child.pid], 
-                        {stdio: 'inherit'}
+		var killer = proc.spawn("node", 
+			[path.join(__dirname, "binjs", "mongokiller.js"), process.pid, child.pid],
+			{ stdio: 'ignore' }
 		);
+		killer.unref();
 		child.on('error', function (err) {
 		  debug('Failed to start child process.', err);
 		  callback(err);

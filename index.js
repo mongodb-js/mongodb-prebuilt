@@ -18,7 +18,7 @@ module.exports = {
 
 var shutdown = function(e) {
     mongodb_logs("Shutting down");
-    if (e) {
+    if (typeof e === "function") {
         throw e;
     }
 }

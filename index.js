@@ -2,11 +2,12 @@
 
 var fs = require('fs');
 var path = require('path');
-var install = require('./install');
+var child_process = require('child_process');
 var proc = require('child_process');
 var EventEmitter = require('events').EventEmitter;
 var debug = require('debug')('mongodb-prebuilt');
 var mongodb_logs = require('debug')('mongodb');
+var os = require('os');
 var emitter = new EventEmitter();
 
 module.exports = {
@@ -24,7 +25,7 @@ var shutdown = function(e) {
     }
 };
 
-process.on('uncaughtException', shutdown);
+//process.on('uncaughtException', shutdown);
 process.on('exit', shutdown);
 
 function start_server(opts, callback) {
@@ -33,66 +34,66 @@ function start_server(opts, callback) {
         opts = {};
     }
 
+	if(! opts.args) {
+		opts.args = {};
+	}
+
+	if(opts.args.fork === undefined) {
+		opts.args.fork = true;
+	}
+
+	if (! opts.args.logpath) {
+		var log_file = path.join(os.tmpdir(), 'mongodb-prebuilt-' + (new Date()).getTime() + '.log');
+		debug('logpath is', log_file);
+		opts.args.logpath = log_file;
+	}
     var args = build_args(opts);
+
     var bpath = bin_path(opts.version);
     if (!bpath) {
-        install(opts.version, function(err) {
-            if (err) {
-                callback(err);
-            } else {
-                bpath = bin_path(opts.version);
-                start();
-            }
-        });
+		console.log('installing');
+		install(opts.version, function(err) {
+			if(err) {
+				callback(err);
+			} else {
+            	bpath = bin_path(opts.version);
+            	start();
+			}
+		});
     } else {
-        start();
+	console.log('starting');
+        return start();
     }
 
     function start() {
         debug("spawn", bpath + "mongod", args.join(' '));
-        var child = proc.spawn(bpath + "mongod", args);
-        var killer = proc.spawn("node", [path.join(__dirname, "binjs", "mongokiller.js"), process.pid, child.pid], {
+        var child = proc.spawnSync(bpath + "mongod", args);
+		mongodb_logs(child.stdout.toString());
+		mongodb_logs(child.stderr.toString());
+
+		if(child.status !== 0) {
+			// error
+			console.log('exiting!');
+            if (opts.exit_callback) {
+                opts.exit_callback(child.status);
+            }
+			callback(child.status);
+			return child.status;
+		}
+
+		// need to catch child pid
+		var child_pid_match = child.stdout.toString().match(/forked process:\s+(\d+)/i);
+		var child_pid = child_pid_match[1];
+        var killer = proc.spawn("node", [path.join(__dirname, "binjs", "mongokiller.js"), process.pid, child_pid], {
             stdio: 'ignore'
         });
         killer.unref();
-        child.on('error', function(err) {
-            debug('Failed to start child process.', err);
-            callback(err);
-        });
-
-        child.on('close', function(code) {
-            debug('child process exited with code ' + code);
-            if (opts.exit_callback) {
-                opts.exit_callback(code);
-            }
-        });
 
         emitter.once('mongoShutdown', function() {
             child.kill('SIGTERM');
         });
 
-        // this type of redirect is causing uncaught exception even with try/catch
-        // when process exits with non zero error code, even tho error handler
-        // is registered
-        //child.stderr.pipe(child.stdout);
-
-        var started = 0;
-        child.stdout.on('data', function(data) {
-            if (opts.logs_callback) {
-                opts.logs_callback(data);
-            }
-            if (!started) {
-                // log message indicating succesful start
-                if (/waiting for connections on port/.test(data.toString())) {
-                    started = 1;
-                    emitter.emit('mongoStarted');
-                }
-                if (/errno:48 Address already in use/.test(data.toString())) {
-                    emitter.emit('mongoStarted', "EADDRINUSE");
-                }
-            }
-            mongodb_logs(data.toString().slice(0, -1));
-        });
+        emitter.emit('mongoStarted');
 
         if (opts.auto_shutdown) {
             // override shutdown function with sigterm
@@ -103,6 +104,8 @@ function start_server(opts, callback) {
                 }
             };
         }
+
+		return child.status;
     }
     return emitter;
 }
@@ -160,12 +163,13 @@ function active_version() {
 }
 
 function install(version, callback) {
+	console.log('what?');
     var bin_path = bin_path(version);
     if (dir_exists(bin_path)) {
-        callback(null);
+        callback(false);
     } else {
-        install(version, function(err) {
-            callback(err);
-        });
+		var install_out = child_process.spawnFileSync('./install.js', [version]);
+		console.log(install_out);
+        callback(!!install_out.status);
     }
 }

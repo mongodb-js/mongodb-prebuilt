@@ -32,42 +32,42 @@
     var dist_path = path.join(__dirname, './dist/');
 
     fs.writeFileSync(path.join(__dirname, 'active_version.txt'), version);
-    fs.writeFile(path.join(__dirname, 'dist_path.txt'), dist_path, function(err) {
-      if (err) {
-        return callback(err);
-      }
-      var archive_type;
-      if (/\.zip$/.test(archive)) {
-        archive_type = "zip";
-      } else {
-        archive_type = "targz";
-      }
-      debug("archive type selected %s", archive_type);
+    fs.writeFileSync(path.join(__dirname, 'dist_path.txt'), dist_path); 
 
-      new Decompress({
-          mode: '755'
-        })
-        .src(archive)
-        .dest(path.join(__dirname, 'dist', version))
-        .use(Decompress[archive_type]({
-          strip: 1
-        }))
-        .run(function(err, files) {
-          if (!err) {
-            callback();
-          } else {
-            //debug(err);
-          }
+    var archive_type;
+    if (/\.zip$/.test(archive)) {
+      archive_type = "zip";
+    } else {
+      archive_type = "targz";
+    }
+    debug("archive type selected %s", archive_type);
 
-        });
+    var decomp = new Decompress({
+        mode: '755'
+      })
+      .src(archive)
+      .dest(path.join(__dirname, 'dist', version))
+      .use(Decompress[archive_type]({
+        strip: 1
+      }));
 
+	var out = decomp.run(function(err, files) {
+	  	console.log('inside extract, run complete');
+        if (!err) {
+          callback();
+        } else {
+          //debug(err);
+        }
     });
   }
+
+  console.log('done');
 
   module.exports = install;
 
   if (!module.parent) {
-    install(null, function(err) {
+  	var mongodb_version = process.argv[2] || null;
+    install(mongodb_version, function(err) {
       if (err) {
         console.log('Error during installation:', err);
       } else {

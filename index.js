@@ -51,17 +51,15 @@ function start_server(opts, callback) {
 
     var bpath = bin_path(opts.version);
     if (!bpath) {
-		console.log('installing');
-		install(opts.version, function(err) {
+		return install(opts.version, function(err) {
 			if(err) {
 				callback(err);
 			} else {
             	bpath = bin_path(opts.version);
-            	start();
+            	return start();
 			}
 		});
     } else {
-	console.log('starting');
         return start();
     }
 
@@ -73,7 +71,6 @@ function start_server(opts, callback) {
 
 		if(child.status !== 0) {
 			// error
-			console.log('exiting!');
             if (opts.exit_callback) {
                 opts.exit_callback(child.status);
             }
@@ -163,13 +160,11 @@ function active_version() {
 }
 
 function install(version, callback) {
-	console.log('what?');
     var bin_path = bin_path(version);
     if (dir_exists(bin_path)) {
         callback(false);
     } else {
 		var install_out = child_process.spawnFileSync('./install.js', [version]);
-		console.log(install_out);
         callback(!!install_out.status);
     }
 }

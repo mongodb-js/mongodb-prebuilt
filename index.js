@@ -8,28 +8,30 @@ var EventEmitter = require('events').EventEmitter;
 var debug = require('debug')('mongodb-prebuilt');
 var mongodb_logs = require('debug')('mongodb');
 var os = require('os');
-var emitter = new EventEmitter();
 
 module.exports = {
     "bin_path": bin_path,
     "dist_path": dist_path,
     "active_version": active_version,
     "install": install,
-    "start_server": start_server
+    "start_server": start_server,
+	"shutdown": shutdown
 };
+
+
+// persist created child pid
+var child_pid = 0;
 
 var shutdown = function(e) {
-    mongodb_logs("Shutting down");
-    if (typeof e === "function") {
-        throw e;
-    }
+	if(child_pid !== 0) {
+		debug('killing mongod process: %d', child_pid);
+		process.kill(child_pid);		
+	}
 };
 
-//process.on('uncaughtException', shutdown);
 process.on('exit', shutdown);
 
 function start_server(opts, callback) {
-    emitter.once('mongoStarted', callback);
     if (!opts) {
         opts = {};
     }
@@ -69,8 +71,8 @@ function start_server(opts, callback) {
 		mongodb_logs(child.stdout.toString());
 		mongodb_logs(child.stderr.toString());
 
+		// error
 		if(child.status !== 0) {
-			// error
             if (opts.exit_callback) {
                 opts.exit_callback(child.status);
             }
@@ -80,31 +82,18 @@ function start_server(opts, callback) {
 
 		// need to catch child pid
 		var child_pid_match = child.stdout.toString().match(/forked process:\s+(\d+)/i);
-		var child_pid = child_pid_match[1];
-        var killer = proc.spawn("node", [path.join(__dirname, "binjs", "mongokiller.js"), process.pid, child_pid], {
-            stdio: 'ignore'
-        });
-        killer.unref();
+		child_pid = child_pid_match[1];
 
-        emitter.once('mongoShutdown', function() {
-            child.kill('SIGTERM');
-        });
-
-        emitter.emit('mongoStarted');
-
-        if (opts.auto_shutdown) {
-            // override shutdown function with sigterm
-            shutdown = function(e) {
-                child.kill('SIGTERM');
-                if (e) {
-                    throw e;
-                }
-            };
-        }
+		// if mongod started, spawn killer
+		if (child.status === 0) {
+        	var killer = proc.spawn("node", [path.join(__dirname, "binjs", "mongokiller.js"), process.pid, child_pid], {
+        	    stdio: 'ignore'
+        	});
+        	killer.unref();
+		}
 
 		return child.status;
     }
-    return emitter;
 }
 
 function dir_exists(dir) {

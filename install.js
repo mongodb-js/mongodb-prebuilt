@@ -9,18 +9,24 @@
   var Decompress = require('decompress');
   var download = require('mongodb-download');
   var debug = require('debug')('mongodb-prebuilt');
-
+  var HttpsProxyAgent = require('https-proxy-agent');
   var LATEST_STABLE_RELEASE = "3.2.0";
 
   function install(version, callback) {
     if (!version) {
       version = process.env.npm_config_mongo_version || LATEST_STABLE_RELEASE;
     }
-    debug("installing version: %s", version);
-    // downloads if not cached
-    download({
+    var params = {
       version: version
-    }, function(err, archive) {
+    };
+    debug("installing version: %s", version);
+    if(process.env.HTTPS_PROXY) {
+      debug("setting proxy for request");
+      params.http_opts = {};
+      params.http_opts.agent = new HttpsProxyAgent(process.env.HTTPS_PROXY);
+    }
+    // downloads if not cached
+    download(params, function(err, archive) {
       if (err) {
         return callback(err);
       }

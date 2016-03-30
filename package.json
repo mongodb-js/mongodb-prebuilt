@@ -39,9 +39,10 @@
     "url": "https://github.com/winfinit/mongodb-prebuilt/issues"
   },
   "dependencies": {
-    "mongodb-download": "^1.2.1",
-    "decompress": "^3.0.0",
     "debug": "^2.2.0",
+    "decompress": "^3.0.0",
+    "https-proxy-agent": "^1.0.0",
+    "mongodb-download": "^1.2.1",
     "yargs": "^3.26.0"
   },
   "homepage": "https://github.com/winfinit/mongodb-prebuilt#readme"

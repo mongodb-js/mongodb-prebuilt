@@ -2,6 +2,8 @@
 
 "use strict";
 
+var argv = require('yargs').argv;
+
 (function() {
   var fs = require('fs');
   var os = require('os');
@@ -9,6 +11,8 @@
   var Decompress = require('decompress');
   var download = require('mongodb-download');
   var debug = require('debug')('mongodb-prebuilt');
+  var https_proxy_agent = require('https-proxy-agent');
+
 
   var LATEST_STABLE_RELEASE = "3.2.0";
 
@@ -17,10 +21,18 @@
       version = process.env.npm_config_mongo_version || LATEST_STABLE_RELEASE;
     }
     debug("installing version: %s", version);
-    // downloads if not cached
-    download({
+	var download_opts = {
       version: version
-    }, function(err, archive) {
+	}
+	if (argv.http_proxy) {
+		debug("using HTTP proxy for download:", argv.http_proxy); 
+		var proxy_agent = new https_proxy_agent(argv.http_proxy);
+		download_opts.http_opts = {
+			agent: proxy_agent
+		};
+	}
+    // downloads if not cached
+    download(download_opts, function(err, archive) {
       if (err) {
         return callback(err);
       }

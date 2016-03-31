@@ -153,7 +153,14 @@ function install(version, callback) {
     if (dir_exists(bin_path)) {
         callback(false);
     } else {
-		var install_out = child_process.spawnFileSync('./install.js', [version]);
+		var spawn_opts = [];
+		if (version) {
+			spawn_opts.push('--version', version);
+		}
+		if (process.env.https_proxy) {
+			spawn_opts.push('--https-proxy', process.env.https_proxy);	
+		}
+		var install_out = child_process.spawnFileSync('./install.js', spawn_opts);
         callback(!!install_out.status);
     }
 }

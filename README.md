@@ -159,3 +159,22 @@ windows
 ```
 set DEBUG=mongodb
 ```
+
+# Download Proxy
+If you require proxy to reach outside networks, you may do it by:
+
+* pass extra argument to npm install
+
+```
+npm install --https-proxy="https://example.com"
+```
+
+* set environment variable with https_proxy
+
+```
+# *nix
+export https_proxy="https://example.com"
+# win32
+set https_proxy="https://example.com"
+```
+

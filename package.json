@@ -1,6 +1,6 @@
 {
   "name": "mongodb-prebuilt",
-  "version": "5.0.2",
+  "version": "5.0.3",
   "description": "Install MongoDB prebuilt binaries via npm",
   "main": "index.js",
   "scripts": {
@@ -43,7 +43,8 @@
     "decompress": "^3.0.0",
     "debug": "^2.2.0",
     "yargs": "^3.26.0",
-	"https-proxy-agent": "^1.0.0"
+    "https-proxy-agent": "^1.0.0",
+    "spawn-sync": "1.0.15"
   },
   "homepage": "https://github.com/winfinit/mongodb-prebuilt#readme"
 }

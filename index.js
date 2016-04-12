@@ -4,6 +4,7 @@ var fs = require('fs');
 var path = require('path');
 var child_process = require('child_process');
 var proc = require('child_process');
+var spawnSync = require('spawn-sync');
 var EventEmitter = require('events').EventEmitter;
 var debug = require('debug')('mongodb-prebuilt');
 var mongodb_logs = require('debug')('mongodb');
@@ -67,7 +68,7 @@ function start_server(opts, callback) {
 
     function start() {
         debug("spawn", bpath + "mongod", args.join(' '));
-        var child = proc.spawnSync(bpath + "mongod", args);
+        var child = spawnSync(bpath + "mongod", args);
         mongodb_logs(child.stdout.toString());
         mongodb_logs(child.stderr.toString());
 

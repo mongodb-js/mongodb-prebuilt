@@ -42,7 +42,7 @@ function start_server(opts, callback) {
     }
 
     if (opts.args.fork === undefined) {
-        opts.args.fork = true;
+        opts.args.fork = false;
     }
 
     if (!opts.args.logpath) {
@@ -68,7 +68,8 @@ function start_server(opts, callback) {
 
     function start() {
         debug("spawn", bpath + "mongod", args.join(' '));
-        var child = spawnSync(bpath + "mongod", args);
+        var spawn = (opts.args.fork)? spawnSync : require('child_process').spawn;
+        var child = spawn(bpath + "mongod", args);
         mongodb_logs(child.stdout.toString());
         mongodb_logs(child.stderr.toString());
 

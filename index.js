@@ -77,16 +77,12 @@ function start_server(opts, callback) {
             if (opts.exit_callback) {
                 opts.exit_callback(child.status);
             }
-            callback(child.status);
-            return child.status;
-        }
-
-        // need to catch child pid
-        var child_pid_match = child.stdout.toString().match(/forked process:\s+(\d+)/i);
-        child_pid = child_pid_match[1];
-
-        // if mongod started, spawn killer
-        if (child.status === 0) {
+        } else { // mongod started
+            // need to catch child pid
+            var child_pid_match = child.stdout.toString().match(/forked process:\s+(\d+)/i);
+            child_pid = child_pid_match[1];
+    
+            // spawn a mongo killer
             debug('starting mongokiller.js, ppid:%d\tmongod pid:%d', process.pid, child_pid);
             var killer = proc.spawn("node", [path.join(__dirname, "binjs", "mongokiller.js"), process.pid, child_pid], {
                 stdio: 'ignore',
@@ -94,7 +90,7 @@ function start_server(opts, callback) {
             });
             killer.unref();
         }
-
+        callback(child.status);
         return child.status;
     }
 }

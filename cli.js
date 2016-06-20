@@ -9,14 +9,25 @@ module.exports = function(exec_name) {
 
         debug("exec_path: %s", exec_bin);
         var child = proc.spawn(exec_bin, process.argv.slice(2), {stdio: 'inherit'});
-                child.on('close', function (code) {
+        child.on('close', function (code) {
                 process.exit(code);
         }); 
 
         var mongokiller = path.resolve(exec_path, '../../../binjs', 'mongokiller.js');
-        var monitor_child = proc.spawn(
-                mongokiller, 
-                [process.pid, child.pid], 
-                {stdio: 'inherit', detached: false}
-        );  
+        debug("mongokiller:", mongokiller, process.pid, child.pid);
+
+        var monitor_child;
+        if (process.platform === "win32") {
+                monitor_child = proc.spawn(
+                        "cmd.exe", 
+                        [mongokiller, process.pid, child.pid], 
+                        {stdio: 'inherit', detached: false}
+                ); 
+        } else {
+                monitor_child = proc.spawn(
+                        mongokiller, 
+                        [process.pid, child.pid], 
+                        {stdio: 'inherit', detached: false}
+                );  
+        }
 }

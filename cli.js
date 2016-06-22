@@ -8,6 +8,7 @@ module.exports = function(exec_name) {
         var exec_bin = path.resolve(exec_path,  exec_name);
 
         debug("exec_path: %s", exec_bin);
+        debug("args: %s", process.argv.slice(2));
         var child = proc.spawn(exec_bin, process.argv.slice(2), {stdio: 'inherit'});
         child.on('close', function (code) {
                 process.exit(code);

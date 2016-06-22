@@ -1,0 +1,14 @@
+2016-06-22T17:49:49.838-0400 I CONTROL  [main] Hotfix KB2731284 or later update is not installed, will zero-out data files
+2016-06-22T17:49:49.838-0400 I CONTROL  [initandlisten] MongoDB starting : pid=3340 port=27017 dbpath=C:\data\db\ 64-bit host=virtualboxguest
+2016-06-22T17:49:49.839-0400 I CONTROL  [initandlisten] targetMinOS: Windows Vista/Windows Server 2008
+2016-06-22T17:49:49.839-0400 I CONTROL  [initandlisten] db version v3.2.0
+2016-06-22T17:49:49.839-0400 I CONTROL  [initandlisten] git version: 45d947729a0315accb6d4f15a6b06be6d9c19fe7
+2016-06-22T17:49:49.839-0400 I CONTROL  [initandlisten] allocator: tcmalloc
+2016-06-22T17:49:49.839-0400 I CONTROL  [initandlisten] modules: none
+2016-06-22T17:49:49.839-0400 I CONTROL  [initandlisten] build environment:
+2016-06-22T17:49:49.839-0400 I CONTROL  [initandlisten]     distarch: x86_64
+2016-06-22T17:49:49.839-0400 I CONTROL  [initandlisten]     target_arch: x86_64
+2016-06-22T17:49:49.839-0400 I CONTROL  [initandlisten] options: { systemLog: { destination: "file", path: "./foo2.log" } }
+2016-06-22T17:49:49.839-0400 E NETWORK  [initandlisten] listen(): bind() failed errno:10048 Only one usage of each socket address (protocol/network address/port) is normally permitted. for socket: 0.0.0.0:27017
+2016-06-22T17:49:49.839-0400 E STORAGE  [initandlisten] Failed to set up sockets during startup.
+2016-06-22T17:49:49.839-0400 I CONTROL  [initandlisten] dbexit:  rc: 48

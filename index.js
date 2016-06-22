@@ -8,6 +8,7 @@ var spawnSync = require('spawn-sync');
 var EventEmitter = require('events').EventEmitter;
 var debug = require('debug')('mongodb-prebuilt');
 var mongodb_logs = require('debug')('mongodb');
+var uuid = require('node-uuid');
 var os = require('os');
 
 module.exports = {
@@ -42,11 +43,13 @@ function start_server(opts, callback) {
     }
 
     if (opts.args.fork === undefined) {
-        opts.args.fork = true;
+        if ( process.platform !== "win32") {
+            opts.args.fork = true;
+        }
     }
 
     if (!opts.args.logpath) {
-        var log_file = path.join(os.tmpdir(), 'mongodb-prebuilt-' + (new Date()).getTime() + '.log');
+        var log_file = path.join(os.tmpdir(), 'mongodb-prebuilt-' + (uuid.v4() + '.log'));
         debug('logpath is', log_file);
         opts.args.logpath = log_file;
     }
@@ -68,9 +71,34 @@ function start_server(opts, callback) {
 
     function start() {
         debug("spawn", bpath + "mongod", args.join(' '));
-        var child = spawnSync(bpath + "mongod", args);
-        mongodb_logs(child.stdout.toString());
-        mongodb_logs(child.stderr.toString());
+        
+        var child;
+        if ( process.platform === "win32" ) {
+            /* windows is not setting fork, 
+                this will emulate that behaviour */
+
+            var out = fs.openSync('./out.log', 'a');
+            var err = fs.openSync('./out.log', 'a');
+
+            child = child_process.spawn(bpath + "mongod", args, {
+                detached: true,
+                stdio: ['ignore', out, err]
+            });
+
+            child.unref();
+
+            
+
+            console.log(out.toString(), err, toString());
+
+
+        } else {
+            child = spawnSync(bpath + "mongod", args);
+            mongodb_logs(child.stdout.toString());
+            mongodb_logs(child.stderr.toString());
+
+        }
+        console.log('args', args);
 
         // error
         if (child.status !== 0) {

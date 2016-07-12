@@ -23,9 +23,10 @@ module.exports = {
 // persist created child pid
 var child_pid = 0;
 
-var shutdown = function(e) {
+function shutdown (e) {
     if (child_pid !== 0) {
         debug('killing mongod process: %d', child_pid);
+        process.removeListener('exit', shutdown);
         process.kill(child_pid);
     }
 };

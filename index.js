@@ -22,12 +22,14 @@ module.exports = {
 
 // persist created child pid
 var child_pid = 0;
+var killer;
 
 function shutdown (e) {
     if (child_pid !== 0) {
         debug('killing mongod process: %d', child_pid);
         process.removeListener('exit', shutdown);
         process.kill(child_pid);
+        killer.kill();
     }
 };
 
@@ -89,7 +91,7 @@ function start_server(opts, callback) {
         // if mongod started, spawn killer
         if (child.status === 0) {
             debug('starting mongokiller.js, ppid:%d\tmongod pid:%d', process.pid, child_pid);
-            var killer = proc.spawn("node", [path.join(__dirname, "binjs", "mongokiller.js"), process.pid, child_pid], {
+            killer = proc.spawn("node", [path.join(__dirname, "binjs", "mongokiller.js"), process.pid, child_pid], {
                 stdio: 'ignore',
                 detached: true
             });

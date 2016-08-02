@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "sourceMap": true
+    },
+    "files": [
+        "./typings/tsd.d.ts",
+        "./typings/node/node.d.ts",
+        "index.ts"
+    ],
+    "exclude": [
+    "typings/browser.d.ts",
+    "typings/browser",
+    "node_modules"
+  ]
+}
+

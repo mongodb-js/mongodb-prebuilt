@@ -25,8 +25,8 @@ var argv = require('yargs').argv;
             var download_opts = {
                 version: version
             }
-            if (opts.httpsProxy || process.env.npm_config_https_proxy) {
-                var proxy_uri = process.env.npm_config_https_proxy || opts.httpsProxy;
+            if (opts.httpsProxy) {
+                var proxy_uri = opts.httpsProxy;
                 debug("using HTTP proxy for download:", proxy_uri);
                 var proxy_agent = new https_proxy_agent(proxy_uri);
                 download_opts.http_opts = {
@@ -86,7 +86,10 @@ var argv = require('yargs').argv;
 
     if (!module.parent) {
         var mongodb_version = process.argv[2] || process.env.npm_config_mongo_version || null;
-        install(mongodb_version, function(err) {
+        install({
+            version: mongodb_version,
+            httpsProxy: process.env.npm_config_https_proxy
+        }, function(err) {
             if (err) {
                 console.error('Error during installation:', err);
                 process.exit(1);

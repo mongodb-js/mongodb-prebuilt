@@ -85,7 +85,7 @@ var argv = require('yargs').argv;
     module.exports = install;
 
     if (!module.parent) {
-        var mongodb_version = process.argv[2] || null;
+        var mongodb_version = process.argv[2] || process.env.npm_config_mongo_version || null;
         install(mongodb_version, function(err) {
             if (err) {
                 console.error('Error during installation:', err);

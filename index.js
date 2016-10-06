@@ -61,7 +61,7 @@ function start_server(opts, callback) {
             debug('MongoDB version ' + opts.version + ' not installed. Installing now...')
             return install(opts.version, function(err) {
                 if (err) {
-                    debug('Failed to debug MongoDB version ' + opts.version + ': ' + err.message);
+                    debug('Failed to download MongoDB version ' + opts.version + ': ' + err.message);
                     callback(err);
                 } else {
                     debug('Successfully installed MongoDB version ' + opts.version);

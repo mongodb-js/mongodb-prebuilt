@@ -60,17 +60,20 @@ var argv = require('yargs').argv;
             }
             debug("archive type selected %s", archive_type);
 
+            var destPath = path.join(__dirname, 'dist', version);
             var decomp = new Decompress({
                 mode: '755'
             })
               .src(archive)
-              .dest(path.join(__dirname, 'dist', version))
+              .dest(destPath)
               .use(Decompress[archive_type]({
                   strip: 1
               }));
 
             var out = decomp.run(function(err, files) {
-                debug('inside extract, run complete');
+                if (!err) {
+                    debug('inside extract, run complete. Extracted to ' + destPath);
+                }
                 callback(err);
             });
         }

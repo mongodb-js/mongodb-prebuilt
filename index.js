@@ -36,69 +36,79 @@ function shutdown (e) {
 process.on('exit', shutdown);
 
 function start_server(opts, callback) {
-    if (!opts) {
-        opts = {};
-    }
-
-    if (!opts.args) {
-        opts.args = {};
-    }
-
-    if (opts.args.fork === undefined) {
-        opts.args.fork = true;
-    }
-
-    if (!opts.args.logpath) {
-        var log_file = path.join(os.tmpdir(), 'mongodb-prebuilt-' + (new Date()).getTime() + '.log');
-        debug('logpath is', log_file);
-        opts.args.logpath = log_file;
-    }
-    var args = build_args(opts);
-
-    var bpath = bin_path(opts.version);
-    if (!bpath) {
-        return install(opts.version, function(err) {
-            if (err) {
-                callback(err);
-            } else {
-                bpath = bin_path(opts.version);
-                return start();
-            }
-        });
-    } else {
-        return start();
-    }
-
-    function start() {
-        debug("spawn", bpath + "mongod", args.join(' '));
-        var child = spawnSync(bpath + "mongod", args);
-        mongodb_logs(child.stdout.toString());
-        mongodb_logs(child.stderr.toString());
-
-        // error
-        if (child.status !== 0) {
-            if (opts.exit_callback) {
-                opts.exit_callback(child.status);
-            }
-            callback(child.status);
-            return child.status;
+    try {
+        if (!opts) {
+            opts = {};
         }
 
-        // need to catch child pid
-        var child_pid_match = child.stdout.toString().match(/forked process:\s+(\d+)/i);
-        child_pid = child_pid_match[1];
+        if (!opts.args) {
+            opts.args = {};
+        }
 
-        // if mongod started, spawn killer
-        if (child.status === 0) {
-            debug('starting mongokiller.js, ppid:%d\tmongod pid:%d', process.pid, child_pid);
-            killer = proc.spawn("node", [path.join(__dirname, "binjs", "mongokiller.js"), process.pid, child_pid], {
-                stdio: 'ignore',
-                detached: true
+        if (opts.args.fork === undefined) {
+            opts.args.fork = true;
+        }
+
+        if (!opts.args.logpath) {
+            var log_file = path.join(os.tmpdir(), 'mongodb-prebuilt-' + (new Date()).getTime() + '.log');
+            debug('logpath is', log_file);
+            opts.args.logpath = log_file;
+        }
+        var args = build_args(opts);
+
+        var bpath = bin_path(opts.version);
+        if (!bpath) {
+            return install(opts.version, function(err) {
+                if (err) {
+                    callback(err);
+                } else {
+                    try {
+                        bpath = bin_path(opts.version);
+                        start(callback);
+                    }
+                    catch (err) { callback(err) }
+                }
             });
-            killer.unref();
+        } else {
+            start(callback);
         }
+    }
+    catch (err) {
+        callback(err);
+    }
 
-        return child.status;
+    function start(callback) {
+        try {
+            debug("spawn", bpath + "mongod", args.join(' '));
+            var child = spawnSync(bpath + "mongod", args);
+            mongodb_logs(child.stdout.toString());
+            mongodb_logs(child.stderr.toString());
+
+            // error
+            if (child.status !== 0) {
+                if (opts.exit_callback) {
+                    opts.exit_callback(child.status);
+                }
+                callback(child.status);
+            }
+
+            // need to catch child pid
+            var child_pid_match = child.stdout.toString().match(/forked process:\s+(\d+)/i);
+            child_pid = child_pid_match[1];
+
+            // if mongod started, spawn killer
+            if (child.status === 0) {
+                debug('starting mongokiller.js, ppid:%d\tmongod pid:%d', process.pid, child_pid);
+                killer = proc.spawn("node", [path.join(__dirname, "binjs", "mongokiller.js"), process.pid, child_pid], {
+                    stdio: 'ignore',
+                    detached: true
+                });
+                killer.unref();
+            }
+
+            callback(null, child.status);
+        }
+        catch (err) { callback(err); }
     }
 }
 
@@ -155,10 +165,14 @@ function active_version() {
 }
 
 function install(version, callback) {
-    var bin_path = bin_path(version);
-    if (dir_exists(bin_path)) {
-        callback(false);
-    } else {
+    try {
+        var bPath = bin_path(version);
+        if (dir_exists(bPath)) {
+            return callback(new Error('Unable to install version ' + version
+              + ': directory already exists ' + bPath
+            ));
+        }
+
         var spawn_opts = [];
         if (version) {
             spawn_opts.push('--version', version);
@@ -169,4 +183,5 @@ function install(version, callback) {
         var install_out = child_process.spawnFileSync('./install.js', spawn_opts);
         callback(!!install_out.status);
     }
+    catch (err) { callback(err); }
 }

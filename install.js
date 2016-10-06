@@ -17,61 +17,64 @@ var argv = require('yargs').argv;
     var LATEST_STABLE_RELEASE = "3.2.0";
 
     function install(version, callback) {
-        if (!version) {
-            version = process.env.npm_config_mongo_version || LATEST_STABLE_RELEASE;
-        }
-        debug("installing version: %s", version);
-        var download_opts = {
-            version: version
-        }
-        if (argv.http_proxy || process.env.npm_config_https_proxy) {
-            var proxy_uri = process.env.npm_config_https_proxy || argv.http_proxy;
-            debug("using HTTP proxy for download:", proxy_uri);
-            var proxy_agent = new https_proxy_agent(proxy_uri);
-            download_opts.http_opts = {
-                agent: proxy_agent
-            };
-        }
-        // downloads if not cached
-        download(download_opts, function(err, archive) {
-            if (err) {
-                return callback(err);
+        try {
+            if (!version) {
+                version = process.env.npm_config_mongo_version || LATEST_STABLE_RELEASE;
             }
-            extractFile(archive, version, callback);
-        });
+            debug("installing version: %s", version);
+            var download_opts = {
+                version: version
+            }
+            if (argv.http_proxy || process.env.npm_config_https_proxy) {
+                var proxy_uri = process.env.npm_config_https_proxy || argv.http_proxy;
+                debug("using HTTP proxy for download:", proxy_uri);
+                var proxy_agent = new https_proxy_agent(proxy_uri);
+                download_opts.http_opts = {
+                    agent: proxy_agent
+                };
+            }
+
+            // downloads if not cached
+            download(download_opts, function(err, archive) {
+                if (err) {
+                    return callback(err);
+                }
+                extractFile(archive, version, callback);
+            });
+        }
+        catch (err) { callback(err); }
     }
 
     function extractFile(archive, version, callback) {
-        var dist_path = path.join(__dirname, './dist/');
+        try {
+            var dist_path = path.join(__dirname, './dist/');
 
-        fs.writeFileSync(path.join(__dirname, 'active_version.txt'), version);
-        fs.writeFileSync(path.join(__dirname, 'dist_path.txt'), dist_path);
+            fs.writeFileSync(path.join(__dirname, 'active_version.txt'), version);
+            fs.writeFileSync(path.join(__dirname, 'dist_path.txt'), dist_path);
 
-        var archive_type;
-        if (/\.zip$/.test(archive)) {
-            archive_type = "zip";
-        } else {
-            archive_type = "targz";
-        }
-        debug("archive type selected %s", archive_type);
+            var archive_type;
+            if (/\.zip$/.test(archive)) {
+                archive_type = "zip";
+            } else {
+                archive_type = "targz";
+            }
+            debug("archive type selected %s", archive_type);
 
-        var decomp = new Decompress({
+            var decomp = new Decompress({
                 mode: '755'
             })
-            .src(archive)
-            .dest(path.join(__dirname, 'dist', version))
-            .use(Decompress[archive_type]({
-                strip: 1
-            }));
+              .src(archive)
+              .dest(path.join(__dirname, 'dist', version))
+              .use(Decompress[archive_type]({
+                  strip: 1
+              }));
 
-        var out = decomp.run(function(err, files) {
-            console.log('inside extract, run complete');
-            if (!err) {
-                callback();
-            } else {
-                //debug(err);
-            }
-        });
+            var out = decomp.run(function(err, files) {
+                console.log('inside extract, run complete');
+                callback(err);
+            });
+        }
+        catch (err) { callback(err); }
     }
 
     console.log('done');

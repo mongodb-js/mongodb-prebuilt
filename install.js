@@ -16,17 +16,17 @@ var argv = require('yargs').argv;
 
     var LATEST_STABLE_RELEASE = "3.2.0";
 
-    function install(version, callback) {
+    function install(opts, callback) {
         try {
-            if (!version) {
-                version = process.env.npm_config_mongo_version || LATEST_STABLE_RELEASE;
-            }
+            opts = opts || {};
+            var version = opts.version || LATEST_STABLE_RELEASE;
+
             debug("installing version: %s", version);
             var download_opts = {
                 version: version
             }
-            if (argv.http_proxy || process.env.npm_config_https_proxy) {
-                var proxy_uri = process.env.npm_config_https_proxy || argv.http_proxy;
+            if (opts.httpsProxy || process.env.npm_config_https_proxy) {
+                var proxy_uri = process.env.npm_config_https_proxy || opts.httpsProxy;
                 debug("using HTTP proxy for download:", proxy_uri);
                 var proxy_agent = new https_proxy_agent(proxy_uri);
                 download_opts.http_opts = {
@@ -70,7 +70,7 @@ var argv = require('yargs').argv;
               }));
 
             var out = decomp.run(function(err, files) {
-                console.log('inside extract, run complete');
+                debug('inside extract, run complete');
                 callback(err);
             });
         }
@@ -85,9 +85,11 @@ var argv = require('yargs').argv;
         var mongodb_version = process.argv[2] || null;
         install(mongodb_version, function(err) {
             if (err) {
-                console.log('Error during installation:', err);
+                console.error('Error during installation:', err);
+                process.exit(1);
             } else {
                 console.log('Done installing MongoDB');
+                process.exit(0);
             }
         });
     }

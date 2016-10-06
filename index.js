@@ -165,6 +165,7 @@ function active_version() {
 }
 
 function install(version, callback) {
+    var _install = require('./install');
     try {
         var bPath = bin_path(version);
         if (dir_exists(bPath)) {
@@ -173,15 +174,10 @@ function install(version, callback) {
             ));
         }
 
-        var spawn_opts = [];
-        if (version) {
-            spawn_opts.push('--version', version);
-        }
-        if (process.env.https_proxy) {
-            spawn_opts.push('--https-proxy', process.env.https_proxy);
-        }
-        var install_out = child_process.spawnFileSync('./install.js', spawn_opts);
-        callback(!!install_out.status);
+        _install({
+            version: version,
+            httpProxy: process.env.https_proxy
+        }, callback);
     }
     catch (err) { callback(err); }
 }

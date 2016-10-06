@@ -58,15 +58,15 @@ function start_server(opts, callback) {
 
         var bpath = bin_path(opts.version);
         if (!bpath) {
+            debug('MongoDB version ' + opts.version + ' not installed. Installing now...')
             return install(opts.version, function(err) {
                 if (err) {
+                    debug('Failed to debug MongoDB version ' + opts.version + ': ' + err.message);
                     callback(err);
                 } else {
-                    try {
-                        bpath = bin_path(opts.version);
-                        start(callback);
-                    }
-                    catch (err) { callback(err) }
+                    debug('Successfully installed MongoDB version ' + opts.version);
+                    // Try again, now that MongoDB is installed
+                    start_server(opts, callback);
                 }
             });
         } else {
@@ -115,11 +115,8 @@ function start_server(opts, callback) {
 function dir_exists(dir) {
     try {
         var stats = fs.lstatSync(dir);
-        if (stats.isDirectory()) {
-            return true;
-        }
+        return stats.isDirectory();
     } catch (e) {
-        debug("error from lstat:", e);
         return false;
     }
 }

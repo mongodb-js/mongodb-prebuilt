@@ -1,5 +1,5 @@
 {
-  "name": "aeris-mongodb-prebuilt",
+  "name": "mongodb-prebuilt",
   "version": "6.0.0",
   "description": "Install MongoDB prebuilt binaries via npm",
   "main": "index.js",

@@ -5,13 +5,13 @@
 var argv = require('yargs').argv;
 
 (function() {
-    var fs = require('fs');
+    var fs = require('fs-extra');
     var os = require('os');
     var path = require('path');
-    var Decompress = require('decompress');
     var download = require('mongodb-download');
     var debug = require('debug')('mongodb-prebuilt');
     var https_proxy_agent = require('https-proxy-agent');
+    var execSync = require('child_process').execSync;
 
 
     var LATEST_STABLE_RELEASE = "3.2.0";
@@ -52,30 +52,24 @@ var argv = require('yargs').argv;
             fs.writeFileSync(path.join(__dirname, 'active_version.txt'), version);
             fs.writeFileSync(path.join(__dirname, 'dist_path.txt'), dist_path);
 
-            var archive_type;
-            if (/\.zip$/.test(archive)) {
-                archive_type = "zip";
-            } else {
-                archive_type = "targz";
-            }
-            debug("archive type selected %s", archive_type);
-
             var destPath = path.join(__dirname, 'dist', version);
-            var decomp = new Decompress({
-                mode: '755'
-            })
-              .src(archive)
-              .dest(destPath)
-              .use(Decompress[archive_type]({
-                  strip: 1
-              }));
+            fs.ensureDirSync(destPath);
 
-            var out = decomp.run(function(err, files) {
-                if (!err) {
-                    debug('inside extract, run complete. Extracted to ' + destPath);
-                }
-                callback(err);
-            });
+            debug('Extracting ' + archive + ' to ' + destPath + ' ...');
+            try {
+                execSync('tar -xf ' + archive + ' -C ' + destPath + ' --strip-components=1');
+            }
+            catch (err) {
+                debug('Failed to extract MongoDB archive. Note that `mongodb-download`' +
+                    ' does not throw or log errors, when it fails to download archives. ' +
+                    'Instead, it creates an empty archive file, which cannot be extracted.' +
+                    'Run install with `DEBUG=mongodb-download,mongodb-prebuilt`, to see a log ' +
+                    'of where it is downloading the archive from, then make sure that version of MongoDB exists.')
+                return callback(err);
+            }
+            debug('Extracted Files: ' + fs.readdirSync(destPath));
+
+            callback();
         }
         catch (err) { callback(err); }
     }

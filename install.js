@@ -24,7 +24,7 @@ var argv = require('yargs').argv;
         var download_opts = {
             version: version
         }
-        if (argv.http_proxy || process.env.npm_config_https_proxy) {
+        if (argv.http_proxy || process.env.https_proxy || process.env.npm_config_https_proxy) {
             var proxy_uri = process.env.npm_config_https_proxy || argv.http_proxy;
             debug("using HTTP proxy for download:", proxy_uri);
             var proxy_agent = new https_proxy_agent(proxy_uri);

@@ -14,7 +14,7 @@ var argv = require('yargs').argv;
     var https_proxy_agent = require('https-proxy-agent');
 
 
-    var LATEST_STABLE_RELEASE = "3.2.0";
+    var LATEST_STABLE_RELEASE = "3.2.10";
 
     function install(version, callback) {
         if (!version) {

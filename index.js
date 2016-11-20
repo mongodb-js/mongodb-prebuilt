@@ -55,11 +55,18 @@ function start_server(opts, callback) {
     }
     var args = build_args(opts);
 
+    // make sure to callback AFTER function.
+    function postCallback(status) {
+        process.nextTick(function() {
+            callback(status);
+        });
+    }
+
     var bpath = bin_path(opts.version);
     if (!bpath) {
         return install(opts.version, function(err) {
             if (err) {
-                callback(err);
+                postCallback(err);
             } else {
                 bpath = bin_path(opts.version);
                 return start();
@@ -80,8 +87,7 @@ function start_server(opts, callback) {
             if (opts.exit_callback) {
                 opts.exit_callback(child.status);
             }
-            callback(child.status);
-            return child.status;
+            postCallback(child.status);
         }
 
         // need to catch child pid
@@ -98,7 +104,7 @@ function start_server(opts, callback) {
             killer.unref();
         }
 
-        return child.status;
+        postCallback();
     }
 }
 

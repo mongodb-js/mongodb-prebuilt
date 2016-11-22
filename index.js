@@ -36,6 +36,7 @@ function shutdown (e) {
 process.on('exit', shutdown);
 
 function start_server(opts, callback) {
+    var isWin = /^win/.test(process.platform);
     if (!opts) {
         opts = {};
     }
@@ -44,7 +45,7 @@ function start_server(opts, callback) {
         opts.args = {};
     }
 
-    if (opts.args.fork === undefined) {
+    if (!isWin && opts.args.fork === undefined) {
         opts.args.fork = true;
     }
 
@@ -71,25 +72,26 @@ function start_server(opts, callback) {
 
     function start() {
         debug("spawn", bpath + "mongod", args.join(' '));
-        var child = spawnSync(bpath + "mongod", args);
+        var spawn = (!isWin)? spawnSync : require('child_process').spawn;
+        var child = spawn(bpath + "mongod", args);
         mongodb_logs(child.stdout.toString());
         mongodb_logs(child.stderr.toString());
+
+        if(isWin && child.pid) {
+            child.status = 0;
+        }
 
         // error
         if (child.status !== 0) {
             if (opts.exit_callback) {
                 opts.exit_callback(child.status);
             }
-            callback(child.status);
-            return child.status;
-        }
+        } else { // mongod started
+            // need to catch child pid
+            var child_pid_match = child.stdout.toString().match(/forked process:\s+(\d+)/i);
+            child_pid = isWin ? child.pid : child_pid_match[1];
 
-        // need to catch child pid
-        var child_pid_match = child.stdout.toString().match(/forked process:\s+(\d+)/i);
-        child_pid = child_pid_match[1];
-
-        // if mongod started, spawn killer
-        if (child.status === 0) {
+            // spawn a mongo killer
             debug('starting mongokiller.js, ppid:%d\tmongod pid:%d', process.pid, child_pid);
             killer = proc.spawn("node", [path.join(__dirname, "binjs", "mongokiller.js"), process.pid, child_pid], {
                 stdio: 'ignore',
@@ -97,6 +99,8 @@ function start_server(opts, callback) {
             });
             killer.unref();
         }
+
+        callback(child.status);
 
         return child.status;
     }

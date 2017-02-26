@@ -1,28 +1,27 @@
 {
   "name": "mongodb-prebuilt",
-  "version": "5.0.8",
+  "version": "6.0.0",
   "description": "Install MongoDB prebuilt binaries via npm",
-  "main": "index.js",
+  "main": "built/mongodb-prebuilt",   
   "scripts": {
-    "postinstall": "node install.js",
     "cache-clean": "rm -rf dist *.txt"
   },
   "bin": {
-    "bsondump": "binjs/bsondump.js",
-    "mongo": "binjs/mongo.js",
-    "mongod": "binjs/mongod.js",
-    "mongodump": "binjs/mongodump.js",
-    "mongoexport": "binjs/mongoexport.js",
-    "mongofiles": "binjs/mongofiles.js",
-    "mongoimport": "binjs/mongoimport.js",
-    "mongooplog": "binjs/mongooplog.js",
-    "mongoperf": "binjs/mongoperf.js",
-    "mongorestore": "binjs/mongorestore.js",
-    "mongos": "binjs/mongos.js",
-    "mongosniff": "binjs/mongosniff.js",
-    "mongostat": "binjs/mongostat.js",
-    "mongotop": "binjs/mongotop.js",
-    "mongokiller": "binjs/mongokiller.js"
+    "bsondump": "bin/bsondump.js",
+    "mongo": "bin/mongo.js",
+    "mongod": "bin/mongod.js",
+    "mongodump": "bin/mongodump.js",
+    "mongoexport": "bin/mongoexport.js",
+    "mongofiles": "bin/mongofiles.js",
+    "mongoimport": "bin/mongoimport.js",
+    "mongooplog": "bin/mongooplog.js",
+    "mongoperf": "bin/mongoperf.js",
+    "mongorestore": "bin/mongorestore.js",
+    "mongos": "bin/mongos.js",
+    "mongosniff": "bin/mongosniff.js",
+    "mongostat": "bin/mongostat.js",
+    "mongotop": "bin/mongotop.js",
+    "mongo-supervise": "bin/mongo-supervise.js"
   },
   "repository": {
     "type": "git",
@@ -32,11 +31,11 @@
     "mongodb",
     "prebuilt",
     "mongod",
-	"mongo",
-	"nosql",
-	"database",
-	"mongodb-prebuilt",
-	"mongodb prebuilt"
+    "mongo",
+    "nosql",
+    "database",
+    "mongodb-prebuilt",
+    "mongodb prebuilt"
   ],
   "author": "Roman Jurkov <winfinit@gmail.com>",
   "license": "ISC",
@@ -44,12 +43,16 @@
     "url": "https://github.com/winfinit/mongodb-prebuilt/issues"
   },
   "dependencies": {
-    "mongodb-download": "^1.3.2",
-    "decompress": "^3.0.0",
+    "mongodb-download": "^2.1.5",
     "debug": "^2.2.0",
     "yargs": "^3.26.0",
-    "https-proxy-agent": "^1.0.0",
+    "glob": "^7.1.1",
     "spawn-sync": "1.0.15"
+  },
+  "devDependencies": {
+    "@types/node": "^6.0.58",
+    "mocha": "^3.2.0",
+    "chai": "^3.5.0"  
   },
   "homepage": "https://github.com/winfinit/mongodb-prebuilt#readme"
 }

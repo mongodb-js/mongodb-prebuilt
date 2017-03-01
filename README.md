@@ -9,10 +9,10 @@ MongoDB is an open-source, document database designed for ease of development an
 
 ## Installation
 
-Download and install the latest build of mongodb for your OS and add it to your projects `package.json` as a `devDependency`:
+Download and install the latest build of mongodb for your OS and add it to your projects `package.json` as a `dependency`:
 
 ```
-npm install mongodb-prebuilt --save-dev
+npm install mongodb-prebuilt --save
 ```
 
 You can also use the `-g` flag (global) to symlink it into your PATH:
@@ -54,127 +54,18 @@ Complete list of programs:
 
 Works on Mac, Windows, Linux and Solaris OSes that MongoDB supports.
 
-The version numbers of this module DO NOT match the version number of the [offical MongoDB releases](https://www.mongodb.org/downloads#production). By default, latest production release will be selected. Different version is set via `mongodb-version`
-option:
-
-```
-npm install --mongodb-version=3.2.0 mongodb-prebuilt
-```
-
 ## Programmatic usage
 
-``` js
-var mongodb_prebuilt = require('mongodb-prebuilt');
+```javascript
+let {MongodHelper} = require('mongodb-prebuilt');
 
-mongodb_prebuilt.start_server({}, function(err) {
-	if (err) {
-		console.log('mongod didnt start:', err);
-	} else {
-		console.log('mongod is started');
-	}
+let mongodHelper = new MongodHelper(['--port', "27018"]);
+
+mongodHelper.run().then((started) => {
+	console.log('mongod is running');
+}, (e) => {
+	console.log('error starting', e);
 });
-```
 
-## start_server(opts, callback)
-
-### opts
-Type: `object`
-
-Hash of `options`.
-
-### callback(err)
-Type: `function`
-
-Function called when the `mongod` is started or returned an error
-
-## Options
-
-### version
-Type: `string`
-
-Optional version of MongoDB can be specified, if it doesn't match latest
-version, and it is a first time you are running this version, mongodb-prebuilt
-will have to go through the install process first.
-
-```
-mongodb_prebuilt.start_server({
-	version: "3.2.0"
-}, function(err) {
-	if (!err) console.log('server started');
-});
-```
-
-### args
-Type: `function`
-
-Optional arguments that are going to be passed to mongod, if argument doesn't
-have a value, set that value to true. To see complete list of supported
-arguments for your version run:
-```
-mongod --help
-```
-
-example of start_server with arguments
-```
-mongodb_prebuilt.start_server({
-		args: {
-			port: 27017,
-			quiet: true
-		}
-})
-```
-
-### logs_callback(buffer)
-Type: `function`
-
-Optional logs handler.
-
-```
-mongodb_prebuilt.start_server({
-	logs_callback: logs_callback
-}, function(err) {});
-
-function logs_callback(buffer) {
-	console.log("log message:", buffer.toString());
-}
-```
-
-### auto_shutdown
-Type: `boolean`
-Default: false
-
-Will automatically shutdown the mongodb server when the parent process either exits or throws an uncaught exception
-
-## Logging
-To see logs in stdout, set environment variable DEBUG to `mongodb`
-
-*nix
-```
-export DEBUG=mongodb
-// without export
-DEBUG=mongodb node myapp.js
-```
-
-windows
-```
-set DEBUG=mongodb
-```
-
-# Download Proxy
-If you require proxy to reach outside networks, you may do it by:
-
-* pass extra argument to npm install
-
-```
-npm install --https-proxy="https://example.com"
-```
-
-* set environment variable with https_proxy
-
-```
-# *nix
-export https_proxy="https://example.com"
-# win32
-set https_proxy="https://example.com"
 ```
 

@@ -49,12 +49,12 @@ var MongoSupervise = (function () {
     MongoSupervise.prototype.runOnWindows = function () {
         this.debug("runOnWindows()");
         var command = this.getSuperviseCommand();
-        this.monitorChild = child_process_1.spawn("cmd.exe", [command, this.parentPid.toString(), this.childPid.toString()], { stdio: 'inherit', detached: false });
+        this.monitorChild = child_process_1.spawn("cmd.exe", [command, this.parentPid.toString(), this.childPid.toString()]);
     };
     MongoSupervise.prototype.runOnLinux = function () {
         this.debug("runOnLinux()");
         var command = this.getSuperviseCommand();
-        this.monitorChild = child_process_1.spawn(command, [this.parentPid.toString(), this.childPid.toString()], { stdio: 'inherit', detached: false });
+        this.monitorChild = child_process_1.spawn(command, [this.parentPid.toString(), this.childPid.toString()]);
     };
     return MongoSupervise;
 }());

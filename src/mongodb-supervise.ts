@@ -66,9 +66,7 @@ export class MongoSupervise {
     let command: string = this.getSuperviseCommand();
     this.monitorChild = spawnChild(
     "cmd.exe", 
-    [command, this.parentPid.toString(), this.childPid.toString()], 
-    {stdio: 'inherit', detached: false}
-    ); 
+    [command, this.parentPid.toString(), this.childPid.toString()]); 
     
   }
   
@@ -76,9 +74,7 @@ export class MongoSupervise {
     this.debug(`runOnLinux()`);
     let command: string = this.getSuperviseCommand();
     this.monitorChild = spawnChild(command, 
-    [this.parentPid.toString(), this.childPid.toString()], 
-    {stdio: 'inherit', detached: false}
-    ); 
+    [this.parentPid.toString(), this.childPid.toString()]); 
     
   }
 }

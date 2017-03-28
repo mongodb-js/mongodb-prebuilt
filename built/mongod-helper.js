@@ -35,17 +35,25 @@ var MongodHelper = (function () {
         var mongodStartExpression = this.getMongodStartedExpression();
         var mongodAlreadyRunningExpression = this.getMongodAlreadyRunningExpression();
         var mongodPermissionDeniedExpression = this.getMongodPermissionDeniedExpression();
+        var mongodDataDirNotFounddExpression = this.getMongodDataDirNotFounddExpression();
+        var mongodShutdownMessageExpression = this.getMongodShutdownMessageExpression();
         if (mongodStartExpression.test(log)) {
             this.resolveLink(true);
         }
         if (mongodAlreadyRunningExpression.test(log)) {
-            this.rejectLink('already running');
+            return this.rejectLink('already running');
         }
         if (mongodAlreadyRunningExpression.test(log)) {
-            this.rejectLink('already running');
+            return this.rejectLink('already running');
         }
         if (mongodPermissionDeniedExpression.test(log)) {
-            this.rejectLink('permission denied');
+            return this.rejectLink('permission denied');
+        }
+        if (mongodDataDirNotFounddExpression.test(log)) {
+            return this.rejectLink('Data directory not found');
+        }
+        if (mongodShutdownMessageExpression.test(log)) {
+            return this.rejectLink('Mongod shutting down');
         }
     };
     MongodHelper.prototype.getMongodStartedExpression = function () {
@@ -57,7 +65,13 @@ var MongodHelper = (function () {
     MongodHelper.prototype.getMongodPermissionDeniedExpression = function () {
         return /permission denied/i;
     };
+    MongodHelper.prototype.getMongodDataDirNotFounddExpression = function () {
+        return /Data directory .*? not found/i;
+    };
+    MongodHelper.prototype.getMongodShutdownMessageExpression = function () {
+        return /shutting down with code/i;
+    };
     return MongodHelper;
 }());
 exports.MongodHelper = MongodHelper;
-//# sourceMappingURL=/Users/winfinit/workspace/rj/mongodb-prebuilt/mongod-helper.js.map
+//# sourceMappingURL=/Users/winfinit/workspace/personal/mongodb-prebuilt/mongod-helper.js.map

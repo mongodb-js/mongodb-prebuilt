@@ -13,4 +13,6 @@ export declare class MongodHelper {
     getMongodStartedExpression(): RegExp;
     getMongodAlreadyRunningExpression(): RegExp;
     getMongodPermissionDeniedExpression(): RegExp;
+    getMongodDataDirNotFounddExpression(): RegExp;
+    getMongodShutdownMessageExpression(): RegExp;
 }

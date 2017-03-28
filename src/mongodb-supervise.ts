@@ -37,19 +37,10 @@ export class MongoSupervise {
 
 
         this.monitorChild.on('close', (code) => {
-          console.log('close of monitor child', code);
-          //this.debug('Failed to start child process.', err);
+          //console.log('close of monitor child', code);
+          this.debug('Exiting child monitor process with code:', code);
         });
 
-        this.monitorChild.stderr.on('close', (message: string) => {
-          console.log('close of monitor child', message);
-          //this.debug('Failed to start child process.', err);
-        });
-
-        this.monitorChild.stdout.on('close', (message: string) => {
-          console.log('close of monitor child', message);
-          //this.debug('Failed to start child process.', err);
-        });
         resolve(true);
 
     });

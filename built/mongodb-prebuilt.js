@@ -74,4 +74,4 @@ var MongoDBPrebuilt = (function () {
     return MongoDBPrebuilt;
 }());
 exports.MongoDBPrebuilt = MongoDBPrebuilt;
-//# sourceMappingURL=/Users/winfinit/workspace/rj/mongodb-prebuilt/mongodb-prebuilt.js.map
+//# sourceMappingURL=/Users/winfinit/workspace/personal/mongodb-prebuilt/mongodb-prebuilt.js.map

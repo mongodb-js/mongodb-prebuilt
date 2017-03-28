@@ -42,22 +42,33 @@ export class MongodHelper {
     let mongodStartExpression: RegExp = this.getMongodStartedExpression();
     let mongodAlreadyRunningExpression: RegExp = this.getMongodAlreadyRunningExpression();
     let mongodPermissionDeniedExpression: RegExp = this.getMongodPermissionDeniedExpression();
+    let mongodDataDirNotFounddExpression: RegExp = this.getMongodDataDirNotFounddExpression();
+    let mongodShutdownMessageExpression: RegExp = this.getMongodShutdownMessageExpression();
     
     if ( mongodStartExpression.test(log) ) {
       this.resolveLink(true);
     }
 
     if ( mongodAlreadyRunningExpression.test(log) ) {
-      this.rejectLink('already running');
+      return this.rejectLink('already running');
     }
 
     if ( mongodAlreadyRunningExpression.test(log) ) {
-      this.rejectLink('already running');
+      return this.rejectLink('already running');
     }
 
     if ( mongodPermissionDeniedExpression.test(log) ) {
-      this.rejectLink('permission denied');
+      return this.rejectLink('permission denied');
     }
+
+    if ( mongodDataDirNotFounddExpression.test(log) ) {
+      return this.rejectLink('Data directory not found');
+    }
+
+    if ( mongodShutdownMessageExpression.test(log) ) {
+      return this.rejectLink('Mongod shutting down');
+    }
+
   }
 
   getMongodStartedExpression(): RegExp {
@@ -70,6 +81,14 @@ export class MongodHelper {
 
   getMongodPermissionDeniedExpression(): RegExp {
     return /permission denied/i;
+  }
+
+  getMongodDataDirNotFounddExpression(): RegExp {
+    return /Data directory .*? not found/i;
+  }
+
+  getMongodShutdownMessageExpression(): RegExp {
+    return /shutting down with code/i;
   }
 
 }

@@ -6,9 +6,11 @@ var child_process_1 = require("child_process");
 var mongodb_prebuilt_1 = require("./mongodb-prebuilt");
 var mongodb_supervise_1 = require("./mongodb-supervise");
 var MongoBins = (function () {
-    function MongoBins(command, commandArguments) {
+    function MongoBins(command, commandArguments, spawnOptions) {
         if (commandArguments === void 0) { commandArguments = []; }
+        if (spawnOptions === void 0) { spawnOptions = {}; }
         this.commandArguments = commandArguments;
+        this.spawnOptions = spawnOptions;
         this.debug = Debug("mongodb-prebuilt-MongoBins");
         this.command = command;
         this.mongoDBPrebuilt = new mongodb_prebuilt_1.MongoDBPrebuilt();
@@ -42,7 +44,10 @@ var MongoBins = (function () {
             ]).then(function (promiseValues) {
                 var command = promiseValues[0];
                 var commandArguments = promiseValues[1];
-                _this.childProcess = child_process_1.spawn(command, commandArguments);
+                _this.childProcess = child_process_1.spawn(command, commandArguments, _this.spawnOptions);
+                _this.childProcess.on('close', function () {
+                    _this.mongoSupervice.monitorChild.kill();
+                });
                 resolve(true);
             });
         });
@@ -66,4 +71,4 @@ var MongoBins = (function () {
     return MongoBins;
 }());
 exports.MongoBins = MongoBins;
-//# sourceMappingURL=/Users/winfinit/workspace/rj/mongodb-prebuilt/mongo-bins.js.map
+//# sourceMappingURL=/Users/winfinit/workspace/personal/mongodb-prebuilt/mongo-bins.js.map

@@ -27,16 +27,8 @@ var MongoSupervise = (function () {
                 _this.runOnLinux();
             }
             _this.monitorChild.on('close', function (code) {
-                console.log('close of monitor child', code);
-                //this.debug('Failed to start child process.', err);
-            });
-            _this.monitorChild.stderr.on('close', function (message) {
-                console.log('close of monitor child', message);
-                //this.debug('Failed to start child process.', err);
-            });
-            _this.monitorChild.stdout.on('close', function (message) {
-                console.log('close of monitor child', message);
-                //this.debug('Failed to start child process.', err);
+                //console.log('close of monitor child', code);
+                _this.debug('Exiting child monitor process with code:', code);
             });
             resolve(true);
         });
@@ -59,4 +51,4 @@ var MongoSupervise = (function () {
     return MongoSupervise;
 }());
 exports.MongoSupervise = MongoSupervise;
-//# sourceMappingURL=/Users/winfinit/workspace/rj/mongodb-prebuilt/mongodb-supervise.js.map
+//# sourceMappingURL=/Users/winfinit/workspace/personal/mongodb-prebuilt/mongodb-supervise.js.map

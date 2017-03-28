@@ -15,4 +15,4 @@ setInterval(function () {
         process.exit();
     }
 }, 2000);
-//# sourceMappingURL=/Users/winfinit/workspace/rj/mongodb-prebuilt/bin/mongo-supervise.js.map
+//# sourceMappingURL=/Users/winfinit/workspace/personal/mongodb-prebuilt/bin/mongo-supervise.js.map

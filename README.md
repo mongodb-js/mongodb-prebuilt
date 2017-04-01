@@ -3,7 +3,7 @@
 
 ![badge](https://nodei.co/npm/mongodb-prebuilt.png?downloads=true)
 
-Install [mongodb](https://github.com/mongodb/mongo) prebuilt binaries for command-line use using npm. This module helps you easily install the `mongodb` command for use on the command line without having to compile anything.
+Install [mongodb](https://github.com/mongodb/mongo) prebuilt binaries using npm. This module helps you easily install the `mongodb` without having to compile anything.
 
 MongoDB is an open-source, document database designed for ease of development and scaling.
 
@@ -12,10 +12,10 @@ MongoDB is an open-source, document database designed for ease of development an
 Download and install the latest build of mongodb for your OS and add it to your projects `package.json` as a `dependency`:
 
 ```
-npm install mongodb-prebuilt --save
+npm install mongodb-prebuilt
 ```
 
-You can also use the `-g` flag (global) to symlink it into your PATH:
+`--global` to make MongoDB binaries accessible without additional configurations.
 
 ```
 npm install -g mongodb-prebuilt

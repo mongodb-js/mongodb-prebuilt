@@ -6,6 +6,7 @@ const COMMAND: string = "mongod";
 export class MongodHelper {
   mongoBin: MongoBins;
   debug: any;
+  
   private resolveLink: (response: boolean) => void = () => {};
   private rejectLink: (response: string) => void = () => {};
   

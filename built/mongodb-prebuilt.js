@@ -67,7 +67,7 @@ var MongoDBPrebuilt = (function () {
             return false;
         }
         else {
-            this.debug("getBinPath() doesn't exist");
+            this.debug("getBinPath() doesn't exist, files: " + files);
             return false;
         }
     };

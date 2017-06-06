@@ -68,7 +68,7 @@ export class MongoDBPrebuilt {
       this.debug(`getBinPath() directory corrupted, only one installation per hash can exist`);
       return false
     } else {
-      this.debug(`getBinPath() doesn't exist`);
+      this.debug(`getBinPath() doesn't exist, files: ${files}`);
       return false;
     }    
   }

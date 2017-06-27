@@ -73,7 +73,7 @@ export class MongodHelper {
   }
 
   getMongodStartedExpression(): RegExp {
-    return /waiting for connections on port/i;
+    return /\[initandlisten\] setting featureCompatibilityVersion/i;
   }
 
   getMongodAlreadyRunningExpression(): RegExp {

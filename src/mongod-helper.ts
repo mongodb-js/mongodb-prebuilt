@@ -40,14 +40,14 @@ export class MongodHelper {
     this.debug(`mongod stdout: ${message}`);
     let log: string = message.toString();
 
-    let mongodStartExpression: RegExp = this.getMongodStartedExpression();
-    let mongodStartExpression2: RegExp = this.getMongodStartedExpression2();
+    let mongodStartExpressionWindows: RegExp = this.getMongodStartedExpressionWindows();
+    let mongodStartExpressionLinux: RegExp = this.getMongodStartedExpressionLinux();
     let mongodAlreadyRunningExpression: RegExp = this.getMongodAlreadyRunningExpression();
     let mongodPermissionDeniedExpression: RegExp = this.getMongodPermissionDeniedExpression();
     let mongodDataDirNotFounddExpression: RegExp = this.getMongodDataDirNotFounddExpression();
     let mongodShutdownMessageExpression: RegExp = this.getMongodShutdownMessageExpression();
 
-    if ( mongodStartExpression.test(log) || mongodStartExpression2.test(log) ) {
+    if ( mongodStartExpressionWindows.test(log) || mongodStartExpressionLinux.test(log) ) {
       this.resolveLink(true);
     }
 
@@ -73,11 +73,11 @@ export class MongodHelper {
 
   }
 
-  getMongodStartedExpression(): RegExp {
+  getMongodStartedExpressionWindows(): RegExp {
     return /waiting for connections on port/i;
   }
 
-  getMongodStartedExpression2(): RegExp {
+  getMongodStartedExpressionLinux(): RegExp {
     return /\[initandlisten\] setting featureCompatibilityVersion/i;
   }
 

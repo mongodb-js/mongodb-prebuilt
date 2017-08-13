@@ -32,13 +32,13 @@ var MongodHelper = (function () {
     MongodHelper.prototype.stdoutHandler = function (message) {
         this.debug("mongod stdout: " + message);
         var log = message.toString();
-        var mongodStartExpression = this.getMongodStartedExpression();
-        var mongodStartExpression2 = this.getMongodStartedExpression2();
+        var mongodStartExpressionWindows = this.getMongodStartedExpressionWindows();
+        var mongodStartExpressionLinux = this.getMongodStartedExpressionLinux();
         var mongodAlreadyRunningExpression = this.getMongodAlreadyRunningExpression();
         var mongodPermissionDeniedExpression = this.getMongodPermissionDeniedExpression();
         var mongodDataDirNotFounddExpression = this.getMongodDataDirNotFounddExpression();
         var mongodShutdownMessageExpression = this.getMongodShutdownMessageExpression();
-        if (mongodStartExpression.test(log) || mongodStartExpression2.test(log)) {
+        if (mongodStartExpressionWindows.test(log) || mongodStartExpressionLinux.test(log)) {
             this.resolveLink(true);
         }
         if (mongodAlreadyRunningExpression.test(log)) {
@@ -57,10 +57,10 @@ var MongodHelper = (function () {
             return this.rejectLink('Mongod shutting down');
         }
     };
-    MongodHelper.prototype.getMongodStartedExpression = function () {
+    MongodHelper.prototype.getMongodStartedExpressionWindows = function () {
         return /waiting for connections on port/i;
     };
-    MongodHelper.prototype.getMongodStartedExpression2 = function () {
+    MongodHelper.prototype.getMongodStartedExpressionLinux = function () {
         return /\[initandlisten\] setting featureCompatibilityVersion/i;
     };
     MongodHelper.prototype.getMongodAlreadyRunningExpression = function () {

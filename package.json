@@ -2,8 +2,8 @@
   "name": "mongodb-prebuilt",
   "version": "6.3.3",
   "description": "Install MongoDB prebuilt binaries via npm",
-  "main": "built/mongodb-prebuilt-all",   
-  "types": "built/mongodb-prebuilt-all.d.ts", 
+  "main": "built/mongodb-prebuilt-all",
+  "types": "built/mongodb-prebuilt-all.d.ts",
   "scripts": {
     "cache-clean": "rm -rf dist *.txt"
   },
@@ -53,7 +53,7 @@
   "devDependencies": {
     "@types/node": "^6.0.58",
     "mocha": "^3.2.0",
-    "chai": "^3.5.0"  
+    "chai": "^3.5.0"
   },
   "homepage": "https://github.com/winfinit/mongodb-prebuilt#readme"
 }

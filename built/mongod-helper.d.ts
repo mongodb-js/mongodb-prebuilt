@@ -11,6 +11,7 @@ export declare class MongodHelper {
     stderrHandler(message: string | Buffer): void;
     stdoutHandler(message: string | Buffer): void;
     getMongodStartedExpression(): RegExp;
+    getMongodStartedExpression2(): RegExp;
     getMongodAlreadyRunningExpression(): RegExp;
     getMongodPermissionDeniedExpression(): RegExp;
     getMongodDataDirNotFounddExpression(): RegExp;

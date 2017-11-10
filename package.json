@@ -1,6 +1,6 @@
 {
   "name": "mongodb-prebuilt",
-  "version": "6.3.3",
+  "version": "6.3.4",
   "description": "Install MongoDB prebuilt binaries via npm",
   "main": "built/mongodb-prebuilt-all",   
   "types": "built/mongodb-prebuilt-all.d.ts", 

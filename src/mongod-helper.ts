@@ -28,6 +28,14 @@ export class MongodHelper {
     })
   }
 
+  stop(): void {
+    this.mongoBin.childProcess.kill('SIGINT')
+  }
+
+  kill(): void {
+    this.mongoBin.childProcess.kill('SIGTERM')
+  }
+
   closeHandler(code: number): void {
     this.debug(`mongod close: ${code}`);
   }

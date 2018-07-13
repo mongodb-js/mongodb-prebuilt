@@ -12,7 +12,7 @@ export class MongodHelper {
   private resolveLink: (response: boolean) => void = () => {};
   private rejectLink: (response: string) => void = () => {};
   
-  constructor(commandArguments: string[] = [], downloadOptions?: IMongoDBDownloadOptions) {
+  constructor(commandArguments: string[] = [], downloadOptions?: Partial<IMongoDBDownloadOptions>) {
     this.mongoBin = new MongoBins(COMMAND, commandArguments, undefined, downloadOptions);
     this.debug = Debug(`mongodb-prebuilt-MongodHelper`);
   }

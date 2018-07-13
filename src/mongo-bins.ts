@@ -1,3 +1,5 @@
+import { IMongoDBDownloadOptions, MongoDBDownload } from "mongodb-download";
+
 const Debug: any = require('debug');
 import {resolve as resolvePath} from 'path';
 import {SpawnOptions, ChildProcess, spawn as spawnChild} from 'child_process';
@@ -9,28 +11,31 @@ export class MongoBins {
   execPath: string;
   debug: any;
   childProcess: ChildProcess;
-  mongoSupervice: MongoSupervise;
+  mongoSupervise: MongoSupervise;
   mongoDBPrebuilt: MongoDBPrebuilt;
 
   constructor(
     command: string, 
     public commandArguments: string[] = [],
-    public spawnOptions: SpawnOptions = {}
+    public spawnOptions: SpawnOptions = {},
+    downloadOptions: Partial<IMongoDBDownloadOptions> = {}
   ) {
     this.debug = Debug(`mongodb-prebuilt-MongoBins`);
     this.command = command;
-    this.mongoDBPrebuilt = new MongoDBPrebuilt();
+    const mongoDbDownload = new MongoDBDownload(downloadOptions);
+    this.mongoDBPrebuilt = new MongoDBPrebuilt(mongoDbDownload);
   }
   
   run(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       this.runCommand().then(() => {
-        this.mongoSupervice = new MongoSupervise(this.childProcess.pid);
-        this.mongoSupervice.run().then(() => {
+        this.mongoSupervise = new MongoSupervise(this.childProcess.pid);
+        this.mongoSupervise.run().then(() => {
           // all good
         }, (e) => {
           // didnt start
           this.debug(`run() Supervise process didn't start: ${e}`);
+          reject(e);
         });
         resolve(true);
       }, (e)=> {
@@ -53,7 +58,7 @@ export class MongoBins {
         let commandArguments: string[] = promiseValues[1];
         this.childProcess = spawnChild(command, commandArguments, this.spawnOptions);
         this.childProcess.on('close', () => {
-          this.mongoSupervice.monitorChild.kill();
+          this.mongoSupervise.monitorChild.kill();
         });
         resolve(true);
       })

@@ -2,27 +2,29 @@
   "name": "mongodb-prebuilt",
   "version": "6.3.5",
   "description": "Install MongoDB prebuilt binaries via npm",
-  "main": "built/mongodb-prebuilt-all",   
-  "types": "built/mongodb-prebuilt-all.d.ts", 
+  "main": "dist/mongodb-prebuilt-all",
+  "types": "dist/mongodb-prebuilt-all.d.ts",
   "scripts": {
+    "prepublish": "yarn run compile",
+    "compile": "tsc",
     "cache-clean": "rm -rf dist *.txt"
   },
   "bin": {
-    "bsondump": "built/bin/bsondump.js",
-    "mongo": "built/bin/mongo.js",
-    "mongod": "built/bin/mongod.js",
-    "mongodump": "built/bin/mongodump.js",
-    "mongoexport": "built/bin/mongoexport.js",
-    "mongofiles": "built/bin/mongofiles.js",
-    "mongoimport": "built/bin/mongoimport.js",
-    "mongooplog": "built/bin/mongooplog.js",
-    "mongoperf": "built/bin/mongoperf.js",
-    "mongorestore": "built/bin/mongorestore.js",
-    "mongos": "built/bin/mongos.js",
-    "mongosniff": "built/bin/mongosniff.js",
-    "mongostat": "built/bin/mongostat.js",
-    "mongotop": "built/bin/mongotop.js",
-    "mongo-supervise": "built/bin/mongo-supervise.js"
+    "bsondump": "dist/bin/bsondump.js",
+    "mongo": "dist/bin/mongo.js",
+    "mongod": "dist/bin/mongod.js",
+    "mongodump": "dist/bin/mongodump.js",
+    "mongoexport": "dist/bin/mongoexport.js",
+    "mongofiles": "dist/bin/mongofiles.js",
+    "mongoimport": "dist/bin/mongoimport.js",
+    "mongooplog": "dist/bin/mongooplog.js",
+    "mongoperf": "dist/bin/mongoperf.js",
+    "mongorestore": "dist/bin/mongorestore.js",
+    "mongos": "dist/bin/mongos.js",
+    "mongosniff": "dist/bin/mongosniff.js",
+    "mongostat": "dist/bin/mongostat.js",
+    "mongotop": "dist/bin/mongotop.js",
+    "mongo-supervise": "dist/bin/mongo-supervise.js"
   },
   "repository": {
     "type": "git",
@@ -44,16 +46,19 @@
     "url": "https://github.com/winfinit/mongodb-prebuilt/issues"
   },
   "dependencies": {
-    "mongodb-download": "^2.2.6",
     "debug": "^2.2.0",
-    "yargs": "^3.26.0",
     "glob": "^7.1.1",
-    "spawn-sync": "1.0.15"
+    "mongodb-download": "^2.2.6",
+    "spawn-sync": "1.0.15",
+    "yargs": "^3.26.0"
   },
   "devDependencies": {
+    "@types/debug": "^0.0.30",
     "@types/node": "^6.0.58",
+    "chai": "^3.5.0",
     "mocha": "^3.2.0",
-    "chai": "^3.5.0"  
+    "ts-node": "^7.0.0",
+    "typescript": "^2.9.2"
   },
   "homepage": "https://github.com/winfinit/mongodb-prebuilt#readme"
 }

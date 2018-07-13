@@ -1,7 +1,9 @@
-let {MongodHelper} = require('./built/mongod-helper');
+let {MongodHelper} = require('./dist/mongod-helper');
 
 
-let mongodHelper = new MongodHelper(['--port', "27018"]);
+let mongodHelper = new MongodHelper(["--dbpath", __dirname + '/data'], {
+	downloadDir: __dirname
+});
 
 mongodHelper.run().then((started) => {
 	console.log('mongod is running');

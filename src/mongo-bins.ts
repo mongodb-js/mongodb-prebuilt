@@ -1,3 +1,5 @@
+import { IMongoDBDownloadOptions, MongoDBDownload } from "mongodb-download";
+
 const Debug: any = require('debug');
 import {resolve as resolvePath} from 'path';
 import {SpawnOptions, ChildProcess, spawn as spawnChild} from 'child_process';
@@ -11,15 +13,19 @@ export class MongoBins {
   childProcess: ChildProcess;
   mongoSupervise: MongoSupervise;
   mongoDBPrebuilt: MongoDBPrebuilt;
+  spawnOptions: SpawnOptions;
 
   constructor(
     command: string, 
     public commandArguments: string[] = [],
-    public spawnOptions: SpawnOptions = {}
+    options: Partial<MongoBinsOptions>,
   ) {
+    this.spawnOptions = options.spawn || {};
+
     this.debug = Debug(`mongodb-prebuilt-MongoBins`);
     this.command = command;
-    this.mongoDBPrebuilt = new MongoDBPrebuilt();
+    const mongoDbDownload = new MongoDBDownload(options.download);
+    this.mongoDBPrebuilt = new MongoDBPrebuilt(mongoDbDownload);
   }
   
   run(): Promise<boolean> {
@@ -78,4 +84,9 @@ export class MongoBins {
     });
   }
 
+}
+
+export interface MongoBinsOptions {
+  spawn: SpawnOptions;
+  download: IMongoDBDownloadOptions;
 }

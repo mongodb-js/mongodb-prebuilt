@@ -1,4 +1,6 @@
 import {MongoBins} from './mongo-bins';
+import {IMongoDBDownloadOptions} from "mongodb-download";
+
 const Debug: any = require('debug');
 
 const COMMAND: string = "mongod";
@@ -10,8 +12,8 @@ export class MongodHelper {
   private resolveLink: (response: boolean) => void = () => {};
   private rejectLink: (response: string) => void = () => {};
   
-  constructor(commandArguments: string[] = []) {
-    this.mongoBin = new MongoBins(COMMAND, commandArguments);
+  constructor(commandArguments: string[] = [], downloadOptions?: IMongoDBDownloadOptions) {
+    this.mongoBin = new MongoBins(COMMAND, commandArguments, {download: downloadOptions});
     this.debug = Debug(`mongodb-prebuilt-MongodHelper`);
   }
   

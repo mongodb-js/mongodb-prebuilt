@@ -17,7 +17,7 @@ export class MongoSupervise {
     this.parentPid = process.pid;
     this.command = "mongo-supervise.js";   
     this.platform =  process.platform;   
-    this.debug = Debug(`mongodb-prebuilt-MongoSupervice`);
+    this.debug = Debug(`mongodb-prebuilt-MongoSupervise`);
   }
   
   getSuperviseCommand(): string {

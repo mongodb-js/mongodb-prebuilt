@@ -9,7 +9,7 @@ export class MongoBins {
   execPath: string;
   debug: any;
   childProcess: ChildProcess;
-  mongoSupervice: MongoSupervise;
+  mongoSupervise: MongoSupervise;
   mongoDBPrebuilt: MongoDBPrebuilt;
 
   constructor(
@@ -25,12 +25,13 @@ export class MongoBins {
   run(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       this.runCommand().then(() => {
-        this.mongoSupervice = new MongoSupervise(this.childProcess.pid);
-        this.mongoSupervice.run().then(() => {
+        this.mongoSupervise = new MongoSupervise(this.childProcess.pid);
+        this.mongoSupervise.run().then(() => {
           // all good
         }, (e) => {
           // didnt start
           this.debug(`run() Supervise process didn't start: ${e}`);
+          reject(e);
         });
         resolve(true);
       }, (e)=> {
@@ -53,7 +54,7 @@ export class MongoBins {
         let commandArguments: string[] = promiseValues[1];
         this.childProcess = spawnChild(command, commandArguments, this.spawnOptions);
         this.childProcess.on('close', () => {
-          this.mongoSupervice.monitorChild.kill();
+          this.mongoSupervise.monitorChild.kill();
         });
         resolve(true);
       })

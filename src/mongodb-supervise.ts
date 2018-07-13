@@ -37,7 +37,6 @@ export class MongoSupervise {
 
 
         this.monitorChild.on('close', (code) => {
-          //console.log('close of monitor child', code);
           this.debug('Exiting child monitor process with code:', code);
         });
 

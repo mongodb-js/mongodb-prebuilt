@@ -83,8 +83,3 @@ export class MongoBins {
   }
 
 }
-
-export interface MongoBinsOptions {
-  spawn: SpawnOptions;
-  download: IMongoDBDownloadOptions;
-}

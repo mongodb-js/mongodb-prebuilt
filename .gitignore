@@ -1,5 +1,8 @@
-node_modules
+node_modules/
+dist/
 *.txt
-dist
 *.log
 *.swp
+
+.idea/
+.vscode/

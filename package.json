@@ -5,7 +5,8 @@
   "main": "dist/mongodb-prebuilt-all",
   "types": "dist/mongodb-prebuilt-all.d.ts",
   "scripts": {
-    "prepublish": "yarn compile",
+    "prepublish": "yarn run compile",
+    "prepare": "yarn run compile",
     "compile": "tsc",
     "cache-clean": "rm -rf dist *.txt"
   },

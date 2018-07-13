@@ -13,18 +13,16 @@ export class MongoBins {
   childProcess: ChildProcess;
   mongoSupervise: MongoSupervise;
   mongoDBPrebuilt: MongoDBPrebuilt;
-  spawnOptions: SpawnOptions;
 
   constructor(
     command: string, 
     public commandArguments: string[] = [],
-    options: Partial<MongoBinsOptions>,
+    public spawnOptions: SpawnOptions = {},
+    downloadOptions: Partial<IMongoDBDownloadOptions> = {}
   ) {
-    this.spawnOptions = options.spawn || {};
-
     this.debug = Debug(`mongodb-prebuilt-MongoBins`);
     this.command = command;
-    const mongoDbDownload = new MongoDBDownload(options.download);
+    const mongoDbDownload = new MongoDBDownload(downloadOptions);
     this.mongoDBPrebuilt = new MongoDBPrebuilt(mongoDbDownload);
   }
   

@@ -5,7 +5,7 @@ var path_1 = require("path");
 var child_process_1 = require("child_process");
 var mongodb_prebuilt_1 = require("./mongodb-prebuilt");
 var mongodb_supervise_1 = require("./mongodb-supervise");
-var MongoBins = (function () {
+var MongoBins = /** @class */ (function () {
     function MongoBins(command, commandArguments, spawnOptions) {
         if (commandArguments === void 0) { commandArguments = []; }
         if (spawnOptions === void 0) { spawnOptions = {}; }
@@ -71,4 +71,4 @@ var MongoBins = (function () {
     return MongoBins;
 }());
 exports.MongoBins = MongoBins;
-//# sourceMappingURL=/Users/winfinit/workspace/personal/mongodb-prebuilt/mongo-bins.js.map
+//# sourceMappingURL=../src/mongo-bins.js.map

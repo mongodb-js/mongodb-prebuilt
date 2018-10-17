@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var Debug = require('debug');
 var path_1 = require("path");
 var child_process_1 = require("child_process");
-var MongoSupervise = (function () {
+var MongoSupervise = /** @class */ (function () {
     function MongoSupervise(childPid) {
         this.childPid = childPid;
         this.execPath = path_1.resolve(__dirname, 'bin');
@@ -51,4 +51,4 @@ var MongoSupervise = (function () {
     return MongoSupervise;
 }());
 exports.MongoSupervise = MongoSupervise;
-//# sourceMappingURL=/Users/winfinit/workspace/personal/mongodb-prebuilt/mongodb-supervise.js.map
+//# sourceMappingURL=../src/mongodb-supervise.js.map

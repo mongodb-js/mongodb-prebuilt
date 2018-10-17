@@ -7,4 +7,4 @@ __export(require("./mongo-bins"));
 __export(require("./mongod-helper"));
 __export(require("./mongodb-prebuilt"));
 __export(require("./mongodb-supervise"));
-//# sourceMappingURL=/Users/winfinit/workspace/personal/mongodb-prebuilt/mongodb-prebuilt-all.js.map
+//# sourceMappingURL=../src/mongodb-prebuilt-all.js.map

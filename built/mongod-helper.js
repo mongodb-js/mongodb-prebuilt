@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mongo_bins_1 = require("./mongo-bins");
 var Debug = require('debug');
 var COMMAND = "mongod";
-var MongodHelper = (function () {
+var MongodHelper = /** @class */ (function () {
     function MongodHelper(commandArguments) {
         if (commandArguments === void 0) { commandArguments = []; }
         this.resolveLink = function () { };
@@ -74,4 +74,4 @@ var MongodHelper = (function () {
     return MongodHelper;
 }());
 exports.MongodHelper = MongodHelper;
-//# sourceMappingURL=/Users/winfinit/workspace/personal/mongodb-prebuilt/mongod-helper.js.map
+//# sourceMappingURL=../src/mongod-helper.js.map

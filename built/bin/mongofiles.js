@@ -9,4 +9,4 @@ mongoBin.run().then(function () {
 }, function (e) {
     console.error("unable to launch " + COMMAND, e);
 });
-//# sourceMappingURL=/Users/winfinit/workspace/personal/mongodb-prebuilt/bin/mongofiles.js.map
+//# sourceMappingURL=../../src/bin/mongofiles.js.map

@@ -8,6 +8,7 @@ import {MongoDBDownload} from 'mongodb-download';
 export class MongoDBPrebuilt {
   private debug: any;
   private binPath: string;
+  private options = {};
   
   constructor(public mongoDBDownload?: MongoDBDownload) {
     this.debug = Debug('mongodb-prebuilt-MongoDBPrebuilt');

@@ -1,11 +1,12 @@
 {
   "name": "mongodb-prebuilt",
-  "version": "6.3.5",
+  "version": "6.3.6",
   "description": "Install MongoDB prebuilt binaries via npm",
   "main": "built/mongodb-prebuilt-all",
   "types": "built/mongodb-prebuilt-all.d.ts",
   "scripts": {
-    "cache-clean": "rm -rf dist *.txt"
+    "cache-clean": "rm -rf dist *.txt",
+    "build": "tsc --build tsconfig.json"
   },
   "bin": {
     "bsondump": "built/bin/bsondump.js",
@@ -26,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/winfinit/mongodb-prebuilt.git"
+    "url": "git+https://github.com/joebach71/mongodb-prebuilt.git"
   },
   "keywords": [
     "mongodb",
@@ -39,9 +40,15 @@
     "mongodb prebuilt"
   ],
   "author": "Roman Jurkov <winfinit@gmail.com>",
+  "contributor": [
+    {
+      "name": "Joe Park",
+      "email": "catechimus@gmail.com"
+    }
+  ],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/winfinit/mongodb-prebuilt/issues"
+    "url": "https://github.com/joebach71/mongodb-prebuilt/issues"
   },
   "dependencies": {
     "debug": "^2.2.0",
@@ -55,5 +62,5 @@
     "chai": "^3.5.0",
     "mocha": "^5.2.0"
   },
-  "homepage": "https://github.com/winfinit/mongodb-prebuilt#readme"
+  "homepage": "https://github.com/joebach71/mongodb-prebuilt#readme"
 }

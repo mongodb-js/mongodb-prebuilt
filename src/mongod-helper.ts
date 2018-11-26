@@ -6,20 +6,20 @@ const COMMAND: string = "mongod";
 export class MongodHelper {
   mongoBin: MongoBins;
   debug: any;
-  
+
   private resolveLink: (response: boolean) => void = () => {};
   private rejectLink: (response: string) => void = () => {};
-  
+
   constructor(commandArguments: string[] = []) {
     this.mongoBin = new MongoBins(COMMAND, commandArguments);
     this.debug = Debug(`mongodb-prebuilt-MongodHelper`);
   }
-  
+
   run(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       this.resolveLink = resolve;
       this.rejectLink = reject;
-      
+
       this.mongoBin.run().then(() => {
         this.mongoBin.childProcess.stderr.on('data', (data) => this.stderrHandler(data));
         this.mongoBin.childProcess.stdout.on('data', (data) => this.stdoutHandler(data));
@@ -43,18 +43,19 @@ export class MongodHelper {
   stderrHandler(message: string | Buffer): void {
     this.debug(`mongod stderr: ${message}`);
   }
-  
+
   stdoutHandler(message: string | Buffer): void {
     this.debug(`mongod stdout: ${message}`);
     let log: string = message.toString();
 
-    let mongodStartExpression: RegExp = this.getMongodStartedExpression();
+    let mongodStartExpressionWindows: RegExp = this.getMongodStartedExpressionWindows();
+    let mongodStartExpressionLinux: RegExp = this.getMongodStartedExpressionLinux();
     let mongodAlreadyRunningExpression: RegExp = this.getMongodAlreadyRunningExpression();
     let mongodPermissionDeniedExpression: RegExp = this.getMongodPermissionDeniedExpression();
     let mongodDataDirNotFounddExpression: RegExp = this.getMongodDataDirNotFounddExpression();
     let mongodShutdownMessageExpression: RegExp = this.getMongodShutdownMessageExpression();
-    
-    if ( mongodStartExpression.test(log) ) {
+
+    if ( mongodStartExpressionWindows.test(log) || mongodStartExpressionLinux.test(log) ) {
       this.resolveLink(true);
     }
 
@@ -80,8 +81,12 @@ export class MongodHelper {
 
   }
 
-  getMongodStartedExpression(): RegExp {
+  getMongodStartedExpressionWindows(): RegExp {
     return /waiting for connections on port/i;
+  }
+
+  getMongodStartedExpressionLinux(): RegExp {
+    return /\[initandlisten\] setting featureCompatibilityVersion/i;
   }
 
   getMongodAlreadyRunningExpression(): RegExp {

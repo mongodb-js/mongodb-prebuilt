@@ -10,7 +10,8 @@ export declare class MongodHelper {
     closeHandler(code: number): void;
     stderrHandler(message: string | Buffer): void;
     stdoutHandler(message: string | Buffer): void;
-    getMongodStartedExpression(): RegExp;
+    getMongodStartedExpressionWindows(): RegExp;
+    getMongodStartedExpressionLinux(): RegExp;
     getMongodAlreadyRunningExpression(): RegExp;
     getMongodPermissionDeniedExpression(): RegExp;
     getMongodDataDirNotFounddExpression(): RegExp;

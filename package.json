@@ -2,10 +2,14 @@
   "name": "mongodb-prebuilt",
   "version": "6.3.5",
   "description": "Install MongoDB prebuilt binaries via npm",
-  "main": "built/mongodb-prebuilt-all",   
-  "types": "built/mongodb-prebuilt-all.d.ts", 
+  "main": "built/mongodb-prebuilt-all",
+  "types": "built/mongodb-prebuilt-all.d.ts",
   "scripts": {
-    "cache-clean": "rm -rf dist *.txt"
+    "cache-clean": "rm -rf dist *.txt",
+    "prepare": "npm run clean && npm run tsc",
+    "tsc": "rm -rf built && tsc",
+    "clean": "rm -rf built",
+    "lint-ts": "tslint -c tslint.json './src/**/*.ts' --fix"
   },
   "bin": {
     "bsondump": "built/bin/bsondump.js",
@@ -52,8 +56,10 @@
   },
   "devDependencies": {
     "@types/node": "^6.0.58",
+    "chai": "^3.5.0",
     "mocha": "^3.2.0",
-    "chai": "^3.5.0"  
+    "tsc": "^1.20150623.0",
+    "typescript": "^2.9.2"
   },
   "homepage": "https://github.com/winfinit/mongodb-prebuilt#readme"
 }

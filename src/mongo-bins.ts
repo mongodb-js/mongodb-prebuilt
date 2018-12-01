@@ -1,8 +1,10 @@
 const Debug: any = require('debug');
-import {resolve as resolvePath} from 'path';
-import {SpawnOptions, ChildProcess, spawn as spawnChild} from 'child_process';
-import {MongoDBPrebuilt} from './mongodb-prebuilt';
-import {MongoSupervise} from './mongodb-supervise';
+import { resolve as resolvePath } from 'path';
+import { SpawnOptions, ChildProcess, spawn as spawnChild } from 'child_process';
+import { IMongoDBDownloadOpts } from './mongod-helper';
+import { MongoDBPrebuilt } from './mongodb-prebuilt';
+import { MongoSupervise } from './mongodb-supervise';
+import { MongoDBDownload } from 'mongodb-download';
 
 export class MongoBins {
   command: string;
@@ -13,15 +15,23 @@ export class MongoBins {
   mongoDBPrebuilt: MongoDBPrebuilt;
 
   constructor(
-    command: string, 
+    command: string,
     public commandArguments: string[] = [],
-    public spawnOptions: SpawnOptions = {}
+    public spawnOptions: SpawnOptions = {},
+
+    downloadOptions?: IMongoDBDownloadOpts
   ) {
+
     this.debug = Debug(`mongodb-prebuilt-MongoBins`);
     this.command = command;
-    this.mongoDBPrebuilt = new MongoDBPrebuilt();
+    if (downloadOptions) {
+      this.mongoDBPrebuilt = new MongoDBPrebuilt(downloadOptions);
+    } else {
+      this.mongoDBPrebuilt = new MongoDBPrebuilt();
+    }
+
   }
-  
+
   run(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       this.runCommand().then(() => {
@@ -33,18 +43,18 @@ export class MongoBins {
           this.debug(`run() Supervise process didn't start: ${e}`);
         });
         resolve(true);
-      }, (e)=> {
+      }, (e) => {
         this.debug(`error executing command ${e}`);
         reject(e);
       });
     });
   }
-  
-  runCommand(): Promise<boolean>  {
+
+  runCommand(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       let getCommandPromise: Promise<string> = this.getCommand();
       let getCommandArgumentsPromise: Promise<string[]> = this.getCommandArguments();
-      
+
       Promise.all([
         getCommandPromise,
         getCommandArgumentsPromise
@@ -60,11 +70,11 @@ export class MongoBins {
 
     });
   }
-  
+
   getCommand(): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       this.mongoDBPrebuilt.getBinPath().then(binPath => {
-        let command: string= resolvePath(binPath, this.command);
+        let command: string = resolvePath(binPath, this.command);
         this.debug(`getCommand(): ${command}`);
         resolve(command);
       });

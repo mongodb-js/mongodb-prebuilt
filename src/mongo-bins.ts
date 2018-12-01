@@ -1,8 +1,10 @@
 const Debug: any = require('debug');
-import {resolve as resolvePath} from 'path';
-import {SpawnOptions, ChildProcess, spawn as spawnChild} from 'child_process';
-import {MongoDBPrebuilt} from './mongodb-prebuilt';
-import {MongoSupervise} from './mongodb-supervise';
+import { resolve as resolvePath } from 'path';
+import { SpawnOptions, ChildProcess, spawn as spawnChild } from 'child_process';
+import { IMongoDBDownloadOpts } from './mongod-helper';
+import { MongoDBPrebuilt } from './mongodb-prebuilt';
+import { MongoSupervise } from './mongodb-supervise';
+import { MongoDBDownload } from 'mongodb-download';
 
 export class MongoBins {
   command: string;
@@ -13,15 +15,23 @@ export class MongoBins {
   mongoDBPrebuilt: MongoDBPrebuilt;
 
   constructor(
-    command: string, 
+    command: string,
     public commandArguments: string[] = [],
-    public spawnOptions: SpawnOptions = {}
+    public spawnOptions: SpawnOptions = {},
+
+    downloadOptions?: IMongoDBDownloadOpts
   ) {
+
     this.debug = Debug(`mongodb-prebuilt-MongoBins`);
     this.command = command;
-    this.mongoDBPrebuilt = new MongoDBPrebuilt();
+    if (downloadOptions) {
+      this.mongoDBPrebuilt = new MongoDBPrebuilt(downloadOptions);
+    } else {
+      this.mongoDBPrebuilt = new MongoDBPrebuilt();
+    }
+
   }
-  
+
   run(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       this.runCommand().then(() => {

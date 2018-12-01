@@ -61,6 +61,12 @@ let {MongodHelper} = require('mongodb-prebuilt');
 
 let mongodHelper = new MongodHelper(['--port', "27018"]);
 
+// OPTIONAL: to control what version of mongo you want to download
+
+mongodHelper = new MongodHelper(['--port', "27018"], {
+	version: 'x.x.x'
+});
+
 mongodHelper.run().then((started) => {
 	console.log('mongod is running');
 }, (e) => {

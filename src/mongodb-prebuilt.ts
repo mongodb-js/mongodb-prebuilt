@@ -1,37 +1,40 @@
 const Debug: any = require('debug');
-const {Glob} = require("glob");
-import {resolve as resolvePath} from 'path';
-import {homedir as osHomeDir} from 'os';
-import {MongoDBDownload} from 'mongodb-download';
+const { Glob } = require("glob");
+import { resolve as resolvePath } from 'path';
+import { homedir as osHomeDir } from 'os';
+import { MongoDBDownload } from 'mongodb-download';
+import { IMongoDBDownloadOpts } from './mongod-helper';
 
 
 export class MongoDBPrebuilt {
   private debug: any;
   private binPath: string;
-  
-  constructor(public mongoDBDownload?: MongoDBDownload) {
+
+  constructor(public mongoDBDownload?: MongoDBDownload | IMongoDBDownloadOpts) {
     this.debug = Debug('mongodb-prebuilt-MongoDBPrebuilt');
-    
-    if (this.mongoDBDownload === undefined) {
-      this.mongoDBDownload = new MongoDBDownload({
+
+    if (!this.mongoDBDownload || !(this.mongoDBDownload instanceof MongoDBDownload)) {
+      const downloadOpts: IMongoDBDownloadOpts = this.mongoDBDownload as IMongoDBDownloadOpts || {
         downloadDir: this.getHomeDirectory()
-      });
-    } 
+      };
+      downloadOpts.downloadDir = downloadOpts.downloadDir || this.getHomeDirectory();
+      this.mongoDBDownload = new MongoDBDownload(downloadOpts);
+    }
   }
-  
+
   getHomeDirectory(): string {
     let homeDir: string = resolvePath(osHomeDir(), '.mongodb-prebuilt');
     this.debug(`getHomeDirectory(): ${homeDir}`);
     return homeDir;
   }
-  
+
   getBinPath(): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-      if ( this.binPath !== undefined ) {
+      if (this.binPath !== undefined) {
         this.debug(`getBinPath() cached: ${this.binPath}`);
         return resolve(this.binPath);
       }
-      this.mongoDBDownload.downloadAndExtract().then((extractLocation: string) => {
+      (<MongoDBDownload>this.mongoDBDownload).downloadAndExtract().then((extractLocation: string) => {
         this.resolveBinPath(extractLocation).then(binPath => {
           resolve(binPath);
         }, e => {

@@ -1,25 +1,37 @@
-import {MongoBins} from './mongo-bins';
+import { MongoBins } from './mongo-bins';
 const Debug: any = require('debug');
 
 const COMMAND: string = "mongod";
 
+export interface IMongoDBDownloadOpts {
+  platform?: string;
+  arch?: string;
+  version?: string;
+  downloadDir?: string;
+  http?: any;
+}
+
 export class MongodHelper {
   mongoBin: MongoBins;
   debug: any;
-  
-  private resolveLink: (response: boolean) => void = () => {};
-  private rejectLink: (response: string) => void = () => {};
-  
-  constructor(commandArguments: string[] = []) {
-    this.mongoBin = new MongoBins(COMMAND, commandArguments);
+
+  private resolveLink: (response: boolean) => void = () => { };
+  private rejectLink: (response: string) => void = () => { };
+
+  constructor(commandArguments: string[] = [], downloadOptions?: IMongoDBDownloadOpts) {
+    if (downloadOptions) {
+      this.mongoBin = new MongoBins(COMMAND, commandArguments, {}, downloadOptions);
+    } else {
+      this.mongoBin = new MongoBins(COMMAND, commandArguments);
+    }
     this.debug = Debug(`mongodb-prebuilt-MongodHelper`);
   }
-  
+
   run(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       this.resolveLink = resolve;
       this.rejectLink = reject;
-      
+
       this.mongoBin.run().then(() => {
         this.mongoBin.childProcess.stderr.on('data', (data) => this.stderrHandler(data));
         this.mongoBin.childProcess.stdout.on('data', (data) => this.stdoutHandler(data));

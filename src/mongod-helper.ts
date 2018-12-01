@@ -47,7 +47,7 @@ export class MongodHelper {
   stderrHandler(message: string | Buffer): void {
     this.debug(`mongod stderr: ${message}`);
   }
-  
+
   stdoutHandler(message: string | Buffer): void {
     this.debug(`mongod stdout: ${message}`);
     let log: string = message.toString();
@@ -57,28 +57,28 @@ export class MongodHelper {
     let mongodPermissionDeniedExpression: RegExp = this.getMongodPermissionDeniedExpression();
     let mongodDataDirNotFounddExpression: RegExp = this.getMongodDataDirNotFounddExpression();
     let mongodShutdownMessageExpression: RegExp = this.getMongodShutdownMessageExpression();
-    
-    if ( mongodStartExpression.test(log) ) {
+
+    if (mongodStartExpression.test(log)) {
       this.resolveLink(true);
     }
 
-    if ( mongodAlreadyRunningExpression.test(log) ) {
+    if (mongodAlreadyRunningExpression.test(log)) {
       return this.rejectLink('already running');
     }
 
-    if ( mongodAlreadyRunningExpression.test(log) ) {
+    if (mongodAlreadyRunningExpression.test(log)) {
       return this.rejectLink('already running');
     }
 
-    if ( mongodPermissionDeniedExpression.test(log) ) {
+    if (mongodPermissionDeniedExpression.test(log)) {
       return this.rejectLink('permission denied');
     }
 
-    if ( mongodDataDirNotFounddExpression.test(log) ) {
+    if (mongodDataDirNotFounddExpression.test(log)) {
       return this.rejectLink('Data directory not found');
     }
 
-    if ( mongodShutdownMessageExpression.test(log) ) {
+    if (mongodShutdownMessageExpression.test(log)) {
       return this.rejectLink('Mongod shutting down');
     }
 

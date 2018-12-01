@@ -43,18 +43,18 @@ export class MongoBins {
           this.debug(`run() Supervise process didn't start: ${e}`);
         });
         resolve(true);
-      }, (e)=> {
+      }, (e) => {
         this.debug(`error executing command ${e}`);
         reject(e);
       });
     });
   }
-  
-  runCommand(): Promise<boolean>  {
+
+  runCommand(): Promise<boolean> {
     return new Promise<boolean>((resolve, reject) => {
       let getCommandPromise: Promise<string> = this.getCommand();
       let getCommandArgumentsPromise: Promise<string[]> = this.getCommandArguments();
-      
+
       Promise.all([
         getCommandPromise,
         getCommandArgumentsPromise
@@ -70,11 +70,11 @@ export class MongoBins {
 
     });
   }
-  
+
   getCommand(): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       this.mongoDBPrebuilt.getBinPath().then(binPath => {
-        let command: string= resolvePath(binPath, this.command);
+        let command: string = resolvePath(binPath, this.command);
         this.debug(`getCommand(): ${command}`);
         resolve(command);
       });

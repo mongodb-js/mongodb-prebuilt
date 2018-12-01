@@ -43,7 +43,7 @@ export class MongoDBPrebuilt {
       })
     });
   }
-  
+
   private resolveBinPath(extractLocation: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
       let binPath: string = `${extractLocation}/*/bin`;
@@ -52,7 +52,7 @@ export class MongoDBPrebuilt {
           this.debug(`resolveBinPath() error ${err}`);
           reject(err);
         } else {
-          if ( this.hasValidBinPath(files) === true ) {
+          if (this.hasValidBinPath(files) === true) {
             let resolvedBinPath: string = files[0];
             this.debug(`resolveBinPath(): ${resolvedBinPath}`);
             resolve(resolvedBinPath);
@@ -63,18 +63,18 @@ export class MongoDBPrebuilt {
       });
     });
   }
-  
+
   private hasValidBinPath(files: string[]): boolean {
-    if ( files.length === 1 ) {
+    if (files.length === 1) {
       return true;
-    } else if ( files.length > 1 ) {
+    } else if (files.length > 1) {
       this.debug(`getBinPath() directory corrupted, only one installation per hash can exist`);
       return false
     } else {
       this.debug(`getBinPath() doesn't exist, files: ${files}`);
       return false;
-    }    
+    }
   }
-  
+
 }
 

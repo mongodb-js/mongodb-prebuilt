@@ -5,14 +5,16 @@ var Glob = require("glob").Glob;
 var path_1 = require("path");
 var os_1 = require("os");
 var mongodb_download_1 = require("mongodb-download");
-var MongoDBPrebuilt = (function () {
+var MongoDBPrebuilt = /** @class */ (function () {
     function MongoDBPrebuilt(mongoDBDownload) {
         this.mongoDBDownload = mongoDBDownload;
         this.debug = Debug('mongodb-prebuilt-MongoDBPrebuilt');
-        if (this.mongoDBDownload === undefined) {
-            this.mongoDBDownload = new mongodb_download_1.MongoDBDownload({
+        if (!this.mongoDBDownload || !(this.mongoDBDownload instanceof mongodb_download_1.MongoDBDownload)) {
+            var downloadOpts = this.mongoDBDownload || {
                 downloadDir: this.getHomeDirectory()
-            });
+            };
+            downloadOpts.downloadDir = downloadOpts.downloadDir || this.getHomeDirectory();
+            this.mongoDBDownload = new mongodb_download_1.MongoDBDownload(downloadOpts);
         }
     }
     MongoDBPrebuilt.prototype.getHomeDirectory = function () {
@@ -74,4 +76,4 @@ var MongoDBPrebuilt = (function () {
     return MongoDBPrebuilt;
 }());
 exports.MongoDBPrebuilt = MongoDBPrebuilt;
-//# sourceMappingURL=/Users/winfinit/workspace/personal/mongodb-prebuilt/mongodb-prebuilt.js.map
+//# sourceMappingURL=/home/alwyn/crashburn/mongodb-prebuilt/mongodb-prebuilt.js.map

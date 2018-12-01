@@ -3,12 +3,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var mongo_bins_1 = require("./mongo-bins");
 var Debug = require('debug');
 var COMMAND = "mongod";
-var MongodHelper = (function () {
-    function MongodHelper(commandArguments) {
+var MongodHelper = /** @class */ (function () {
+    function MongodHelper(commandArguments, downloadOptions) {
         if (commandArguments === void 0) { commandArguments = []; }
         this.resolveLink = function () { };
         this.rejectLink = function () { };
-        this.mongoBin = new mongo_bins_1.MongoBins(COMMAND, commandArguments);
+        if (downloadOptions) {
+            this.mongoBin = new mongo_bins_1.MongoBins(COMMAND, commandArguments, {}, downloadOptions);
+        }
+        else {
+            this.mongoBin = new mongo_bins_1.MongoBins(COMMAND, commandArguments);
+        }
         this.debug = Debug("mongodb-prebuilt-MongodHelper");
     }
     MongodHelper.prototype.run = function () {
@@ -22,6 +27,12 @@ var MongodHelper = (function () {
                 _this.mongoBin.childProcess.on('close', function (code) { return _this.closeHandler(code); });
             });
         });
+    };
+    MongodHelper.prototype.stop = function () {
+        this.mongoBin.childProcess.kill('SIGINT');
+    };
+    MongodHelper.prototype.kill = function () {
+        this.mongoBin.childProcess.kill('SIGTERM');
     };
     MongodHelper.prototype.closeHandler = function (code) {
         this.debug("mongod close: " + code);
@@ -74,4 +85,4 @@ var MongodHelper = (function () {
     return MongodHelper;
 }());
 exports.MongodHelper = MongodHelper;
-//# sourceMappingURL=/Users/winfinit/workspace/personal/mongodb-prebuilt/mongod-helper.js.map
+//# sourceMappingURL=/home/alwyn/crashburn/mongodb-prebuilt/mongod-helper.js.map

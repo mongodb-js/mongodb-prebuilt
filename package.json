@@ -48,11 +48,11 @@
     "url": "https://github.com/winfinit/mongodb-prebuilt/issues"
   },
   "dependencies": {
-    "mongodb-download": "^2.2.6",
     "debug": "^2.2.0",
-    "yargs": "^3.26.0",
     "glob": "^7.1.1",
-    "spawn-sync": "1.0.15"
+    "mongodb-download": "^2.2.7",
+    "spawn-sync": "1.0.15",
+    "yargs": "^3.26.0"
   },
   "devDependencies": {
     "@types/node": "^6.0.58",

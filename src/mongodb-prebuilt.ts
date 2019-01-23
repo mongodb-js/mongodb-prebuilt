@@ -2,19 +2,17 @@ const Debug: any = require('debug');
 const { Glob } = require("glob");
 import { resolve as resolvePath } from 'path';
 import { homedir as osHomeDir } from 'os';
-import { MongoDBDownload } from 'mongodb-download';
-import { IMongoDBDownloadOpts } from './mongod-helper';
-
+import { IMongoDBDownloadOptions, MongoDBDownload } from 'mongodb-download';
 
 export class MongoDBPrebuilt {
   private debug: any;
   private binPath: string;
 
-  constructor(public mongoDBDownload?: MongoDBDownload | IMongoDBDownloadOpts) {
+  constructor(public mongoDBDownload?: MongoDBDownload | Partial<IMongoDBDownloadOptions>) {
     this.debug = Debug('mongodb-prebuilt-MongoDBPrebuilt');
 
     if (!this.mongoDBDownload || !(this.mongoDBDownload instanceof MongoDBDownload)) {
-      const downloadOpts: IMongoDBDownloadOpts = this.mongoDBDownload as IMongoDBDownloadOpts || {
+      const downloadOpts: Partial<IMongoDBDownloadOptions> = this.mongoDBDownload as Partial<IMongoDBDownloadOptions> || {
         downloadDir: this.getHomeDirectory()
       };
       downloadOpts.downloadDir = downloadOpts.downloadDir || this.getHomeDirectory();
@@ -77,4 +75,3 @@ export class MongoDBPrebuilt {
   }
 
 }
-

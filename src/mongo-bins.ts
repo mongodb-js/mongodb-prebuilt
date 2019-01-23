@@ -1,35 +1,30 @@
 const Debug: any = require('debug');
 import { resolve as resolvePath } from 'path';
 import { SpawnOptions, ChildProcess, spawn as spawnChild } from 'child_process';
-import { IMongoDBDownloadOpts } from './mongod-helper';
+import { IMongoDBDownloadOptions } from 'mongodb-download';
 import { MongoDBPrebuilt } from './mongodb-prebuilt';
 import { MongoSupervise } from './mongodb-supervise';
-import { MongoDBDownload } from 'mongodb-download';
 
 export class MongoBins {
-  command: string;
-  execPath: string;
   debug: any;
   childProcess: ChildProcess;
   mongoSupervice: MongoSupervise;
   mongoDBPrebuilt: MongoDBPrebuilt;
 
   constructor(
-    command: string,
+    public command: string,
     public commandArguments: string[] = [],
     public spawnOptions: SpawnOptions = {},
-
-    downloadOptions?: IMongoDBDownloadOpts
+    downloadOptions?: Partial<IMongoDBDownloadOptions>
   ) {
 
     this.debug = Debug(`mongodb-prebuilt-MongoBins`);
-    this.command = command;
+
     if (downloadOptions) {
       this.mongoDBPrebuilt = new MongoDBPrebuilt(downloadOptions);
     } else {
       this.mongoDBPrebuilt = new MongoDBPrebuilt();
     }
-
   }
 
   run(): Promise<boolean> {

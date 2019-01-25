@@ -54,6 +54,20 @@ Complete list of programs:
 
 Works on Mac, Windows, Linux and Solaris OSes that MongoDB supports.
 
+## CLI usage
+The latest version of MongoDB is used by default for your OS and `~/.mongodb-prebuilt` for downloading MongoDB binary.
+You can set desired version, download folder, architecture and platform through environment variables:
+```
+MONGODB_VERSION
+MONGODB_DOWNLOADDIR
+MONGODB_ARCH
+MONGODB_PLATFORM
+```
+For example:
+```
+export MONGODB_DOWNLOADDIR='./' MONGODB_VERSION=3.4.10
+mongod --port 27018 --dbpath ./mongodb --logpath /dev/stdout
+```
 ## Programmatic usage
 
 ```javascript

@@ -1,10 +1,9 @@
-import { MongoDBDownload } from 'mongodb-download';
-import { IMongoDBDownloadOpts } from './mongod-helper';
+import { IMongoDBDownloadOptions, MongoDBDownload } from 'mongodb-download';
 export declare class MongoDBPrebuilt {
-    mongoDBDownload?: MongoDBDownload | IMongoDBDownloadOpts;
+    mongoDBDownload?: MongoDBDownload | Partial<IMongoDBDownloadOptions>;
     private debug;
     private binPath;
-    constructor(mongoDBDownload?: MongoDBDownload | IMongoDBDownloadOpts);
+    constructor(mongoDBDownload?: MongoDBDownload | Partial<IMongoDBDownloadOptions>);
     getHomeDirectory(): string;
     getBinPath(): Promise<string>;
     private resolveBinPath;

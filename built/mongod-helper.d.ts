@@ -1,18 +1,12 @@
 /// <reference types="node" />
 import { MongoBins } from './mongo-bins';
-export interface IMongoDBDownloadOpts {
-    platform?: string;
-    arch?: string;
-    version?: string;
-    downloadDir?: string;
-    http?: any;
-}
+import { IMongoDBDownloadOptions } from 'mongodb-download';
 export declare class MongodHelper {
     mongoBin: MongoBins;
     debug: any;
     private resolveLink;
     private rejectLink;
-    constructor(commandArguments?: string[], downloadOptions?: IMongoDBDownloadOpts);
+    constructor(commandArguments?: string[], downloadOptions?: Partial<IMongoDBDownloadOptions>);
     run(): Promise<boolean>;
     stop(): void;
     kill(): void;

@@ -51,4 +51,4 @@ var MongoSupervise = /** @class */ (function () {
     return MongoSupervise;
 }());
 exports.MongoSupervise = MongoSupervise;
-//# sourceMappingURL=/home/alwyn/crashburn/mongodb-prebuilt/mongodb-supervise.js.map
+//# sourceMappingURL=/Users/alwyn/crashburn/mongodb-prebuilt/mongodb-supervise.js.map

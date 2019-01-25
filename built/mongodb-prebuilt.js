@@ -76,4 +76,4 @@ var MongoDBPrebuilt = /** @class */ (function () {
     return MongoDBPrebuilt;
 }());
 exports.MongoDBPrebuilt = MongoDBPrebuilt;
-//# sourceMappingURL=/home/alwyn/crashburn/mongodb-prebuilt/mongodb-prebuilt.js.map
+//# sourceMappingURL=/Users/alwyn/crashburn/mongodb-prebuilt/mongodb-prebuilt.js.map

@@ -15,4 +15,4 @@ setInterval(function () {
         process.exit();
     }
 }, 2000);
-//# sourceMappingURL=/home/alwyn/crashburn/mongodb-prebuilt/bin/mongo-supervise.js.map
+//# sourceMappingURL=/Users/alwyn/crashburn/mongodb-prebuilt/bin/mongo-supervise.js.map

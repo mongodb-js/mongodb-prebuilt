@@ -9,10 +9,10 @@ var MongoBins = /** @class */ (function () {
     function MongoBins(command, commandArguments, spawnOptions, downloadOptions) {
         if (commandArguments === void 0) { commandArguments = []; }
         if (spawnOptions === void 0) { spawnOptions = {}; }
+        this.command = command;
         this.commandArguments = commandArguments;
         this.spawnOptions = spawnOptions;
         this.debug = Debug("mongodb-prebuilt-MongoBins");
-        this.command = command;
         if (downloadOptions) {
             this.mongoDBPrebuilt = new mongodb_prebuilt_1.MongoDBPrebuilt(downloadOptions);
         }
@@ -76,4 +76,4 @@ var MongoBins = /** @class */ (function () {
     return MongoBins;
 }());
 exports.MongoBins = MongoBins;
-//# sourceMappingURL=/home/alwyn/crashburn/mongodb-prebuilt/mongo-bins.js.map
+//# sourceMappingURL=/Users/alwyn/crashburn/mongodb-prebuilt/mongo-bins.js.map

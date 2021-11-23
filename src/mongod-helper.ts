@@ -86,7 +86,7 @@ export class MongodHelper {
   }
 
   getMongodStartedExpression(): RegExp {
-    return /waiting for connections on port/i;
+    return /waiting for connections/i;
   }
 
   getMongodAlreadyRunningExpression(): RegExp {
